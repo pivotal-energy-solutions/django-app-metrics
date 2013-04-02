@@ -4,14 +4,15 @@ from django.conf import settings
 from django.db import models, IntegrityError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from apps.company.models import Company
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
-
 class Metric(models.Model):
     """ The type of metric we want to store """
-    name = models.CharField(_('name'), max_length=50)
-    slug = models.SlugField(_('slug'), unique=True, max_length=60, db_index=True)
+    name = models.CharField(_('name'), max_length=32)
+    company = models.ForeignKey(Company)
+    slug = models.SlugField(_('slug'), unique=True, max_length=64, db_index=True)
 
     class Meta:
         verbose_name = _('metric')
@@ -22,14 +23,14 @@ class Metric(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id and not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify("{} {}".format(self.name, self.company.name))
             i = 0
             while True:
                 try:
                     return super(Metric, self).save(*args, **kwargs)
                 except IntegrityError:
                     i += 1
-                    self.slug = "%s_%d" % (self.slug, i)
+                    self.slug = "%s-%d" % (self.slug, i)
         else:
             return super(Metric, self).save(*args, **kwargs)
 
@@ -139,8 +140,9 @@ class Gauge(models.Model):
     """
     A representation of the current state of some data.
     """
-    name = models.CharField(_('name'), max_length=50)
-    slug = models.SlugField(_('slug'), unique=True, max_length=60)
+    name = models.CharField(_('name'), max_length=32)
+    company = models.ForeignKey(Company)
+    slug = models.SlugField(_('slug'), unique=True, max_length=64)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
     created = models.DateTimeField(_('created'), default=datetime.datetime.now)
     updated = models.DateTimeField(_('updated'), default=datetime.datetime.now)
@@ -153,8 +155,14 @@ class Gauge(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.id and not self.slug:
-            self.slug = slugify(self.name)
-
         self.updated = datetime.datetime.now()
+        if not self.id and not self.slug:
+            self.slug = slugify("{} {}".format(self.name, self.company.name))
+            i = 0
+            while True:
+                try:
+                    return super(Gauge, self).save(*args, **kwargs)
+                except IntegrityError:
+                    i += 1
+                    self.slug = "%s-%d" % (self.slug, i)
         return super(Gauge, self).save(*args, **kwargs)
