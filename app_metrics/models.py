@@ -12,9 +12,10 @@ class Metric(models.Model):
     """ The type of metric we want to store """
     name = models.CharField(_('name'), max_length=32)
     company = models.ForeignKey(Company, blank=True, null=True)
-    slug = models.SlugField(_('slug'), unique=True, max_length=64, db_index=True)
+    slug = models.SlugField(_('slug'), max_length=64, db_index=True)
 
     class Meta:
+        unique_together = ('slug', 'company')
         verbose_name = _('metric')
         verbose_name_plural = _('metrics')
 
@@ -23,7 +24,7 @@ class Metric(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id and not self.slug:
-            self.slug = slugify("{} {}".format(self.name, self.company.name if self.company else ""))
+            self.slug = slugify(self.name)
             i = 0
             while True:
                 try:
@@ -142,7 +143,7 @@ class Gauge(models.Model):
     """
     name = models.CharField(_('name'), max_length=32)
     company = models.ForeignKey(Company, blank=True, null=True)
-    slug = models.SlugField(_('slug'), unique=True, max_length=64)
+    slug = models.SlugField(_('slug'), max_length=64)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
     created = models.DateTimeField(_('created'), default=datetime.datetime.now)
     updated = models.DateTimeField(_('updated'), default=datetime.datetime.now)
@@ -157,7 +158,7 @@ class Gauge(models.Model):
     def save(self, *args, **kwargs):
         self.updated = datetime.datetime.now()
         if not self.id and not self.slug:
-            self.slug = slugify("{} {}".format(self.name, self.company.name if self.company else ""))
+            self.slug = slugify(self.name)
             i = 0
             while True:
                 try:

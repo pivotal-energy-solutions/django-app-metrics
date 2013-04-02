@@ -52,7 +52,7 @@ def create_metric_set(name=None, metrics=None, email_recipients=None,
 
     return metric_set
 
-def create_metric(name, slug):
+def create_metric(**kwargs):
     """ Create a new type of metric to track """
 
     # This should be a NOOP for the non-database-backed backends
@@ -60,16 +60,17 @@ def create_metric(name, slug):
         return
 
     # See if this metric already exists
-    existing = Metric.objects.filter(name=name, slug=slug)
+    assert(len(kwargs.keys()), "Missing keys")
 
+    existing = Metric.objects.filter(**kwargs)
     if existing:
         return False
     else:
-        new_metric = Metric(name=name, slug=slug)
+        new_metric = Metric(**kwargs)
         new_metric.save()
         return new_metric
 
-def get_or_create_metric(name, slug):
+def get_or_create_metric(**kwargs):
     """
     Returns the metric with the given name and slug, creating
     it if necessary
@@ -79,7 +80,7 @@ def get_or_create_metric(name, slug):
     if not should_create_models():
         return
 
-    metric, created = Metric.objects.get_or_create(name=name, slug=slug)
+    metric, created = Metric.objects.get_or_create(**kwargs)
     return metric
 
 
@@ -96,7 +97,7 @@ def import_backend():
     return backend
 
 
-def metric(slug, num=1, **kwargs):
+def metric(num=1, **kwargs):
     """ Increment a metric """
     if collection_disabled():
         return
@@ -104,10 +105,12 @@ def metric(slug, num=1, **kwargs):
     backend = import_backend()
 
     try:
-        backend.metric(slug, num, **kwargs)
+        backend.metric(num, **kwargs)
     except Metric.DoesNotExist:
-        create_metric(slug=slug, name='Autocreated Metric')
-
+        if not kwargs.get('name'):
+            kwargs['name'] = "AutoCreated Metric"
+        metric = create_metric(**kwargs)
+        backend.metric(num, metric.as_dict())
 
 class Timer(object):
     """
@@ -187,12 +190,12 @@ def timing(slug):
     timer.store(slug)
 
 
-def gauge(slug, current_value, **kwargs):
+def gauge(current_value, **kwargs):
     """Update a gauge."""
     if collection_disabled():
         return
     backend = import_backend()
-    backend.gauge(slug, current_value, **kwargs)
+    backend.gauge(current_value, **kwargs)
 
 
 def week_for_date(date):

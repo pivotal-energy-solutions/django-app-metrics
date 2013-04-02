@@ -42,18 +42,14 @@ class MixPanelTrackError(Exception):
 # DB Tasks
 
 @task
-def db_metric_task(slug, num=1, **kwargs):
-    met = Metric.objects.get(slug=slug)
+def db_metric_task(num=1, **kwargs):
+    met = Metric.objects.get(**kwargs)
     MetricItem.objects.create(metric=met, num=num)
 
-
 @task
-def db_gauge_task(slug, current_value, **kwargs):
-    gauge, created = Gauge.objects.get_or_create(slug=slug, defaults={
-        'name': slug,
-        'current_value': current_value,
-    })
-
+def db_gauge_task(current_value, **kwargs):
+    gauge, created = Gauge.objects.get_or_create(
+        **kwargs, defaults={'current_value': current_value})
     if not created:
         gauge.current_value = current_value
         gauge.save()
