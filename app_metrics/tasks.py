@@ -48,8 +48,9 @@ def db_metric_task(num=1, **kwargs):
     """This is a task to add a metric item"""
     if getattr(settings, 'DEBUG'):
         log.setLevel(logging.DEBUG)
+    created = kwargs.pop('created', None)
     met = Metric.objects.get(**kwargs)
-    MetricItem.objects.create(metric=met, num=num)
+    MetricItem.objects.create(metric=met, num=num, created=created)
 
 @task
 def db_gauge_task(current_value, **kwargs):

@@ -2,6 +2,7 @@ from contextlib import contextmanager
 import datetime
 import time
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.importlib import import_module
 
 from app_metrics.exceptions import InvalidMetricsBackend, TimerError
@@ -86,14 +87,12 @@ def get_or_create_metric(**kwargs):
 
 def import_backend():
     backend_string = get_backend()
-    print backend_string
     # Attempt to import the backend
     try:
         backend = import_module(backend_string)
     except Exception, e:
         err = "Could not load '%s' as a backend: %s" % (backend_string, e)
         raise InvalidMetricsBackend(err)
-
     return backend
 
 
@@ -101,13 +100,10 @@ def metric(num=1, **kwargs):
     """ Increment a metric """
     if collection_disabled():
         return
-
     backend = import_backend()
-    print backend
     try:
-        print kwargs
         backend.metric(num, **kwargs)
-    except Metric.DoesNotExist:
+    except ObjectDoesNotExist:
         if not kwargs.get('name'):
             kwargs['name'] = "AutoCreated Metric"
         metric = create_metric(**kwargs)
