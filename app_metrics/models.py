@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models, IntegrityError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from app_metrics.managers import MetricManager
 from apps.company.models import Company
 from django.utils.timezone import now as utcnow
 
@@ -21,7 +22,8 @@ class Metric(models.Model):
         verbose_name_plural = _('metrics')
 
     def __unicode__(self):
-        return self.name
+        company = u'' if not self.company else u' ({})'.format(self.company)
+        return u'{}{}'.format(self.name, company)
 
     def save(self, *args, **kwargs):
         if not self.id and not self.slug:
@@ -65,7 +67,7 @@ class MetricItem(models.Model):
 
     def __unicode__(self):
         return _("'%(name)s' of %(num)d on %(created)s") % {
-            'name': self.metric.name,
+            'name': self.metric,
             'num': self.num,
             'created': self.created
         }
@@ -76,13 +78,15 @@ class MetricDay(models.Model):
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
+    objects = MetricManager()
+
     class Meta:
         verbose_name = _('day metric')
         verbose_name_plural = _('day metrics')
 
     def __unicode__(self):
         return _("'%(name)s' for '%(created)s'") % {
-            'name': self.metric.name,
+            'name': self.metric,
             'created': self.created
         }
 
@@ -92,13 +96,15 @@ class MetricWeek(models.Model):
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
+    objects = MetricManager()
+
     class Meta:
         verbose_name = _('week metric')
         verbose_name_plural = _('week metrics')
 
     def __unicode__(self):
         return _("'%(name)s' for week %(week)s of %(year)s") % {
-            'name': self.metric.name,
+            'name': self.metric,
             'week': self.created.strftime("%U"),
             'year': self.created.strftime("%Y")
         }
@@ -109,13 +115,15 @@ class MetricMonth(models.Model):
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
+    objects = MetricManager()
+
     class Meta:
         verbose_name = _('month metric')
         verbose_name_plural = _('month metrics')
 
     def __unicode__(self):
         return _("'%(name)s' for %(month)s %(year)s") % {
-            'name': self.metric.name,
+            'name': self.metric,
             'month': self.created.strftime("%B"),
             'year': self.created.strftime("%Y")
         }
@@ -127,13 +135,15 @@ class MetricYear(models.Model):
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
+    objects = MetricManager()
+
     class Meta:
         verbose_name = _('year metric')
         verbose_name_plural = _('year metrics')
 
     def __unicode__(self):
         return _("'%(name)s' for %(year)s") % {
-            'name': self.metric.name,
+            'name': self.metric,
             'year': self.created.strftime("%Y")
         }
 
