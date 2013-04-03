@@ -3,6 +3,9 @@ import json
 import urllib
 import urllib2
 import datetime
+import logging
+
+log = logging.getLogger('celery.task')
 
 try:
     from celery.task import task
@@ -39,20 +42,29 @@ except ImportError:
 class MixPanelTrackError(Exception):
     pass
 
-# DB Tasks
 
 @task
 def db_metric_task(num=1, **kwargs):
+    """This is a task to add a metric item"""
+    if getattr(settings, 'DEBUG'):
+        log.setLevel(logging.DEBUG)
     met = Metric.objects.get(**kwargs)
     MetricItem.objects.create(metric=met, num=num)
 
 @task
 def db_gauge_task(current_value, **kwargs):
-    gauge, created = Gauge.objects.get_or_create(
-        **kwargs, defaults={'current_value': current_value})
+    """This is a task to adjust (or create) a guage"""
+    if getattr(settings, 'DEBUG'):
+        log.setLevel(logging.DEBUG)
+
+    if 'defaults' not in kwargs.keys():
+        kwargs['defaults'] = {}
+    kwargs['defaults']['current_value'] = current_value
+    gauge, created = Gauge.objects.get_or_create(**kwargs)
     if not created:
         gauge.current_value = current_value
         gauge.save()
+    log.debug("{} Gauge {} to {}".format("Created" if created else "Updated", gauge, current_value))
 
 
 def _get_token():

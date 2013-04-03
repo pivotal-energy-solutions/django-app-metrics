@@ -60,7 +60,7 @@ def create_metric(**kwargs):
         return
 
     # See if this metric already exists
-    assert(len(kwargs.keys()), "Missing keys")
+    assert len(kwargs.keys()), "Missing keys"
 
     existing = Metric.objects.filter(**kwargs)
     if existing:
@@ -86,13 +86,13 @@ def get_or_create_metric(**kwargs):
 
 def import_backend():
     backend_string = get_backend()
-
+    print backend_string
     # Attempt to import the backend
     try:
         backend = import_module(backend_string)
     except Exception, e:
-        raise InvalidMetricsBackend("Could not load '%s' as a backend: %s" %
-                                    (backend_string, e))
+        err = "Could not load '%s' as a backend: %s" % (backend_string, e)
+        raise InvalidMetricsBackend(err)
 
     return backend
 
@@ -103,8 +103,9 @@ def metric(num=1, **kwargs):
         return
 
     backend = import_backend()
-
+    print backend
     try:
+        print kwargs
         backend.metric(num, **kwargs)
     except Metric.DoesNotExist:
         if not kwargs.get('name'):

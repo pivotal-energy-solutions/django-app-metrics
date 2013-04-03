@@ -5,6 +5,7 @@ from django.db import models, IntegrityError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from apps.company.models import Company
+from django.utils.timezone import now as utcnow
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -56,7 +57,7 @@ class MetricItem(models.Model):
     """ Individual metric items """
     metric = models.ForeignKey(Metric, verbose_name=_('metric'))
     num = models.IntegerField(_('number'), default=1)
-    created = models.DateTimeField(_('created'), default=datetime.datetime.now)
+    created = models.DateTimeField(_('created'), default=utcnow)
 
     class Meta:
         verbose_name = _('metric item')
@@ -145,8 +146,8 @@ class Gauge(models.Model):
     company = models.ForeignKey(Company, blank=True, null=True)
     slug = models.SlugField(_('slug'), max_length=64)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
-    created = models.DateTimeField(_('created'), default=datetime.datetime.now)
-    updated = models.DateTimeField(_('updated'), default=datetime.datetime.now)
+    created = models.DateTimeField(_('created'), default=utcnow)
+    updated = models.DateTimeField(_('updated'), default=utcnow)
 
     class Meta:
         verbose_name = _('gauge')
