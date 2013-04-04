@@ -35,11 +35,18 @@ class MetricManager(models.Manager):
     def filter_certifications_by_user(self, user, **kwargs):
         """A way to trim down the list of objects by company"""
         assert isinstance(user, User), "Need a Company"
-        names = [kwargs.pop("name", "Total Certifications")]
+
+        name = kwargs.pop("name", None)
+        names = [name] if name else []
+        from apps.eep_program.models import EEPProgram
+        if not len(names):
+            names = EEPProgram.objects.filter_by_user(user).values_list('name', flat=True)
+            names = ["{} Certifications".format(name) for name in names]
+
         if user.is_superuser:
             return self.filter(metric__name__iexact=name, **kwargs)
         company = user.company
-        if company.company_type in ["rater", "hvac"]:
+        if company.company_type in ["rater", "hvac", "qa"]:
             return self.filter(metric__company=company, metric__name__in=names, **kwargs)
 
         # Everyone else should only see data for companies in which we have mutual relationships.
@@ -48,11 +55,6 @@ class MetricManager(models.Manager):
         rels = company.relationships.get_companies(ids_only=True)
         # The intersection of these is what matters..
         ints = list(set(rels).intersection(set(comps)))
-
-        if company.company_type == "eep" or company.is_eep_sponsor:
-            from apps.eep_program.models import EEPProgram
-            names = EEPProgram.objects.filter(owner=company).values_list('name', flat=True)
-            names = ["{} Certifications".format(name) for name in names]
 
         data = self.filter(Q(metric__company=company) | Q(metric__company__in=ints),
                            metric__name__in=names, **kwargs)
