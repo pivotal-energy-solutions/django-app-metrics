@@ -31,14 +31,16 @@ class MetricManager(models.Manager):
         kwargs['company'] = user.profile.company
         return self.filter_by_company(**kwargs)
 
-    def filter_certifications_by_company(self, company, **kwargs):
-        """A way to trim down the list of objects by company"""
-        from apps.company.models import Company
-        assert isinstance(company, Company), "Need a Company"
-        name = kwargs.get("name", "certifications")
 
+    def filter_certifications_by_user(self, user, **kwargs):
+        """A way to trim down the list of objects by company"""
+        assert isinstance(user, User), "Need a Company"
+        names = [kwargs.pop("name", "Total Certifications")]
+        if user.is_superuser:
+            return self.filter(metric__name__iexact=name, **kwargs)
+        company = user.company
         if company.company_type in ["rater", "hvac"]:
-            return self.filter(metric__company=company, name__iexact=name, **kwargs)
+            return self.filter(metric__company=company, metric__name__in=names, **kwargs)
 
         # Everyone else should only see data for companies in which we have mutual relationships.
         comps = Relationship.objects.get_reversed_companies(company, ids_only=True)
@@ -46,5 +48,12 @@ class MetricManager(models.Manager):
         rels = company.relationships.get_companies(ids_only=True)
         # The intersection of these is what matters..
         ints = list(set(rels).intersection(set(comps)))
-        return self.filter(Q(metric__company=company) | Q(metric__company__in=ints),
-                           metric__name__iexact=name, **kwargs)
+
+        if company.company_type == "eep" or company.is_eep_sponsor:
+            from apps.eep_program.models import EEPProgram
+            names = EEPProgram.objects.filter(owner=company).values_list('name', flat=True)
+            names = ["{} Certifications".format(name) for name in names]
+
+        data = self.filter(Q(metric__company=company) | Q(metric__company__in=ints),
+                           metric__name__in=names, **kwargs)
+        return data

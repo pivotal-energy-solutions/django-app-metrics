@@ -49,8 +49,11 @@ def db_metric_task(num=1, **kwargs):
     if getattr(settings, 'DEBUG'):
         log.setLevel(logging.DEBUG)
     created = kwargs.pop('created', None)
-    met = Metric.objects.get(**kwargs)
-    MetricItem.objects.create(metric=met, num=num, created=created)
+    try:
+        met = Metric.objects.get(**kwargs)
+        MetricItem.objects.create(metric=met, num=num, created=created)
+    except:
+        log.exception("Unable to complete task!! - kwargs: {}".format(kwargs))
 
 @task
 def db_gauge_task(current_value, **kwargs):

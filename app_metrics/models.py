@@ -12,9 +12,9 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 class Metric(models.Model):
     """ The type of metric we want to store """
-    name = models.CharField(_('name'), max_length=32)
+    name = models.CharField(_('name'), max_length=128)
     company = models.ForeignKey(Company, blank=True, null=True)
-    slug = models.SlugField(_('slug'), max_length=64, db_index=True)
+    slug = models.SlugField(_('slug'), max_length=128, db_index=True)
 
     class Meta:
         unique_together = ('slug', 'company')
@@ -40,7 +40,7 @@ class Metric(models.Model):
 
 class MetricSet(models.Model):
     """ A set of metrics that should be sent via email to certain users """
-    name = models.CharField(_('name'), max_length=50)
+    name = models.CharField(_('name'), max_length=128)
     metrics = models.ManyToManyField(Metric, verbose_name=_('metrics'))
     email_recipients = models.ManyToManyField(USER_MODEL, verbose_name=_('email recipients'))
     no_email = models.BooleanField(_('no e-mail'), default=False)
@@ -83,6 +83,7 @@ class MetricDay(models.Model):
     class Meta:
         verbose_name = _('day metric')
         verbose_name_plural = _('day metrics')
+        ordering = (_('created'), _('metric'))
 
     def __unicode__(self):
         return _("'%(name)s' for '%(created)s'") % {
@@ -101,6 +102,7 @@ class MetricWeek(models.Model):
     class Meta:
         verbose_name = _('week metric')
         verbose_name_plural = _('week metrics')
+        ordering = (_('created'), _('metric'))
 
     def __unicode__(self):
         return _("'%(name)s' for week %(week)s of %(year)s") % {
@@ -120,6 +122,7 @@ class MetricMonth(models.Model):
     class Meta:
         verbose_name = _('month metric')
         verbose_name_plural = _('month metrics')
+        ordering = (_('created'), _('metric'))
 
     def __unicode__(self):
         return _("'%(name)s' for %(month)s %(year)s") % {
@@ -140,6 +143,7 @@ class MetricYear(models.Model):
     class Meta:
         verbose_name = _('year metric')
         verbose_name_plural = _('year metrics')
+        ordering = (_('created'), _('metric'))
 
     def __unicode__(self):
         return _("'%(name)s' for %(year)s") % {
@@ -152,9 +156,9 @@ class Gauge(models.Model):
     """
     A representation of the current state of some data.
     """
-    name = models.CharField(_('name'), max_length=32)
+    name = models.CharField(_('name'), max_length=128)
     company = models.ForeignKey(Company, blank=True, null=True)
-    slug = models.SlugField(_('slug'), max_length=64)
+    slug = models.SlugField(_('slug'), max_length=128)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
     created = models.DateTimeField(_('created'), default=utcnow)
     updated = models.DateTimeField(_('updated'), default=utcnow)

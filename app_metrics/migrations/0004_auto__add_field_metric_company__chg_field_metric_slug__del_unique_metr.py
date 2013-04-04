@@ -21,13 +21,16 @@ class Migration(SchemaMigration):
 
 
         # Changing field 'Metric.slug'
-        db.alter_column('app_metrics_metric', 'slug', self.gf('django.db.models.fields.SlugField')(max_length=64))
+        db.alter_column('app_metrics_metric', 'slug', self.gf('django.db.models.fields.SlugField')(max_length=128))
 
         # Changing field 'Metric.name'
-        db.alter_column('app_metrics_metric', 'name', self.gf('django.db.models.fields.CharField')(max_length=32))
+        db.alter_column('app_metrics_metric', 'name', self.gf('django.db.models.fields.CharField')(max_length=128))
         # Adding unique constraint on 'Metric', fields ['company', 'slug']
         db.create_unique('app_metrics_metric', ['company_id', 'slug'])
 
+
+        # Changing field 'MetricSet.name'
+        db.alter_column('app_metrics_metricset', 'name', self.gf('django.db.models.fields.CharField')(max_length=128))
         # Adding field 'Gauge.company'
         db.add_column('app_metrics_gauge', 'company',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['company.Company'], null=True, blank=True),
@@ -35,10 +38,10 @@ class Migration(SchemaMigration):
 
 
         # Changing field 'Gauge.name'
-        db.alter_column('app_metrics_gauge', 'name', self.gf('django.db.models.fields.CharField')(max_length=32))
+        db.alter_column('app_metrics_gauge', 'name', self.gf('django.db.models.fields.CharField')(max_length=128))
 
         # Changing field 'Gauge.slug'
-        db.alter_column('app_metrics_gauge', 'slug', self.gf('django.db.models.fields.SlugField')(max_length=64))
+        db.alter_column('app_metrics_gauge', 'slug', self.gf('django.db.models.fields.SlugField')(max_length=128))
 
     def backwards(self, orm):
         # Removing unique constraint on 'Metric', fields ['company', 'slug']
@@ -56,6 +59,9 @@ class Migration(SchemaMigration):
 
         # Changing field 'Metric.name'
         db.alter_column('app_metrics_metric', 'name', self.gf('django.db.models.fields.CharField')(max_length=50))
+
+        # Changing field 'MetricSet.name'
+        db.alter_column('app_metrics_metricset', 'name', self.gf('django.db.models.fields.CharField')(max_length=50))
         # Deleting field 'Gauge.company'
         db.delete_column('app_metrics_gauge', 'company_id')
 
@@ -76,16 +82,16 @@ class Migration(SchemaMigration):
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'current_value': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '15', 'decimal_places': '6'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '64'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'})
         },
         'app_metrics.metric': {
             'Meta': {'unique_together': "(('slug', 'company'),)", 'object_name': 'Metric'},
             'company': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['company.Company']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '64'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128'})
         },
         'app_metrics.metricday': {
             'Meta': {'object_name': 'MetricDay'},
@@ -113,7 +119,7 @@ class Migration(SchemaMigration):
             'email_recipients': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.User']", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'metrics': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['app_metrics.Metric']", 'symmetrical': 'False'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'no_email': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'send_daily': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'send_monthly': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
