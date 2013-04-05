@@ -5,7 +5,6 @@ from django.db import models, IntegrityError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from app_metrics.managers import MetricManager
-from apps.company.models import Company
 from django.utils.timezone import now as utcnow
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -13,7 +12,7 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 class Metric(models.Model):
     """ The type of metric we want to store """
     name = models.CharField(_('name'), max_length=128)
-    company = models.ForeignKey(Company, blank=True, null=True)
+    company = models.ForeignKey('company.Company', blank=True, null=True)
     slug = models.SlugField(_('slug'), max_length=128, db_index=True)
 
     class Meta:
@@ -157,7 +156,7 @@ class Gauge(models.Model):
     A representation of the current state of some data.
     """
     name = models.CharField(_('name'), max_length=128)
-    company = models.ForeignKey(Company, blank=True, null=True)
+    company = models.ForeignKey('company.Company', blank=True, null=True)
     slug = models.SlugField(_('slug'), max_length=128)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
     created = models.DateTimeField(_('created'), default=utcnow)
