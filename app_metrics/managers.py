@@ -34,7 +34,7 @@ class MetricManager(models.Manager):
 
     def filter_certifications_by_user(self, user, **kwargs):
         """A way to trim down the list of objects by company"""
-        assert isinstance(user, User), "Need a Company"
+        assert isinstance(user, User), "Need a User"
 
         name = kwargs.pop("name", None)
         names = [name] if name else []
