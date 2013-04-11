@@ -44,7 +44,7 @@ class MetricManager(models.Manager):
             names = ["{} Certifications".format(name) for name in names]
 
         if user.is_superuser:
-            return self.filter(metric__name__iexact=name, **kwargs)
+            return self.filter(metric__name__in=names, **kwargs)
         company = user.company
         if company.company_type in ["rater", "hvac", "qa"]:
             return self.filter(metric__company=company, metric__name__in=names, **kwargs)
