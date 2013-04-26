@@ -4,6 +4,7 @@ import urllib
 import urllib2
 import datetime
 import logging
+from django.utils.timezone import now as utcnow
 
 log = logging.getLogger('celery.task')
 
@@ -48,7 +49,7 @@ def db_metric_task(num=1, **kwargs):
     """This is a task to add a metric item"""
     if getattr(settings, 'DEBUG'):
         log.setLevel(logging.DEBUG)
-    created = kwargs.pop('created', None)
+    created = kwargs.pop('created', utcnow())
     try:
         met, _ = Metric.objects.get_or_create(**kwargs)
         MetricItem.objects.create(metric=met, num=num, created=created)
