@@ -104,7 +104,7 @@ def metric(num=1, **kwargs):
     try:
         backend.metric(num, **kwargs)
     except ObjectDoesNotExist:
-        if not kwargs.get('name'):
+        if 'name' not in kwargs.keys() and 'name' not in kwargs.get('defaults', {}).keys():
             kwargs['name'] = "AutoCreated Metric"
         metric = create_metric(**kwargs)
         backend.metric(num, metric.as_dict())
