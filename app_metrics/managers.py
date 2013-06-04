@@ -41,12 +41,12 @@ class MetricManager(models.Manager):
         from apps.eep_program.models import EEPProgram
         if not len(names):
             names = EEPProgram.objects.filter_by_user(user).values_list('name', flat=True)
-            names = ["{} Certifications".format(name) for name in names]
+            names = ["EEP {} Certifications".format(name) for name in names]
 
         if user.is_superuser:
             return self.filter(metric__name__in=names, **kwargs)
         company = user.company
-        if company.company_type in ["rater", "hvac", "qa"]:
+        if company.company_type in ["rater", "hvac", "qa", "provider"]:
             return self.filter(metric__company=company, metric__name__in=names, **kwargs)
 
         # Everyone else should only see data for companies in which we have mutual relationships.
@@ -55,7 +55,6 @@ class MetricManager(models.Manager):
         rels = company.relationships.get_companies(ids_only=True)
         # The intersection of these is what matters..
         ints = list(set(rels).intersection(set(comps)))
-
         data = self.filter(Q(metric__company=company) | Q(metric__company__in=ints),
                            metric__name__in=names, **kwargs)
         return data
