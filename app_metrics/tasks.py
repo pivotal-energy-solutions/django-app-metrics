@@ -60,6 +60,9 @@ def db_metric_task(num=1, **kwargs):
     try:
         met, _ = Metric.objects.get_or_create(**kwargs)
         MetricItem.objects.create(metric=met, num=num, created=created)
+    except IntegrityError:
+        met, _ = Metric.objects.get(**kwargs)
+        MetricItem.objects.create(metric=met, num=num, created=created)
     except Exception as err:
         issue = "Unable to complete task!! {} - kwargs: {}".format(err, kwargs)
         log.exception(issue)
