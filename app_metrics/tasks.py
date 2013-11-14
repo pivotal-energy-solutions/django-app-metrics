@@ -16,6 +16,7 @@ except ImportError:
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.db import IntegrityError
 
 from app_metrics.models import Metric, MetricItem, Gauge
 
