@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """managers.py: Django app_metrics"""
 
+from __future__ import unicode_literals
+
 import logging
 from django.contrib.auth.models import User
 from django.db import models
