@@ -1,57 +1,69 @@
-import datetime 
-from django.core.management.base import NoArgsCommand 
+import datetime
+from django.core.management.base import NoArgsCommand
 
-from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear 
+from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
 
-from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_backend 
+from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_backend
 
-class Command(NoArgsCommand): 
-    help = "Aggregate Application Metrics" 
+class Command(NoArgsCommand):
+    help = "Aggregate Application Metrics"
 
-    requires_model_validation = True 
+    requires_model_validation = True
 
-    def handle_noargs(self, **options): 
-        """ Aggregate Application Metrics """ 
+    def handle_noargs(self, **options):
+        """ Aggregate Application Metrics """
 
-        backend = get_backend() 
+        backend = get_backend()
 
         # If using Mixpanel this command is a NOOP
-        if backend == 'app_metrics.backends.mixpanel': 
+        if backend == 'app_metrics.backends.mixpanel':
             print "Useless use of metrics_aggregate when using Mixpanel backend"
-            return 
+            return
 
         # Aggregate Items
-        items = MetricItem.objects.all() 
+        items = MetricItem.objects.all()
 
-        for i in items: 
-            # Daily Aggregation 
-            day,create = MetricDay.objects.get_or_create(metric=i.metric, 
-                                                         created=i.created)
+        for i in items:
+            # Daily Aggregation
+            try:
+                day,create = MetricDay.objects.get_or_create(metric=i.metric, created=i.created)
+            except MultipleObjectsReturned:
+                log.exception("Multiple MetricDay found for Metric Item ({}) - {}".format(i.id, i))
+                raise
 
             day.num = day.num + i.num
-            day.save() 
+            day.save()
 
-            # Weekly Aggregation 
+            # Weekly Aggregation
             week_date = week_for_date(i.created)
-            week, create = MetricWeek.objects.get_or_create(metric=i.metric,
-                                                            created=week_date)
+            try:
+                week, create = MetricWeek.objects.get_or_create(metric=i.metric, created=week_date)
+            except MultipleObjectsReturned:
+                log.exception("Multiple MetricWeek found for Metric Item ({}) - {}".format(i.id, i))
+                raise
 
-            week.num = week.num + i.num 
-            week.save() 
+            week.num = week.num + i.num
+            week.save()
 
-            # Monthly Aggregation 
-            month_date = month_for_date(i.created) 
-            month, create = MetricMonth.objects.get_or_create(metric=i.metric,
-                                                              created=month_date)
-            month.num = month.num + i.num 
-            month.save() 
+            # Monthly Aggregation
+            month_date = month_for_date(i.created)
+            try:
+                month, create = MetricMonth.objects.get_or_create(metric=i.metric, created=month_date)
+            except MultipleObjectsReturned:
+                log.exception("Multiple MetricMonth found for Metric Item ({}) - {}".format(i.id, i))
+                raise
+            month.num = month.num + i.num
+            month.save()
 
-            # Yearly Aggregation 
-            year_date = year_for_date(i.created) 
-            year, create = MetricYear.objects.get_or_create(metric=i.metric,
-                                                              created=year_date)
-            year.num = year.num + i.num 
-            year.save() 
+            # Yearly Aggregation
+            year_date = year_for_date(i.created)
+            try:
+                year, create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
+            except MultipleObjectsReturned:
+                log.exception("Multiple MetricYear found for Metric Item ({}) - {}".format(i.id, i))
+                raise
+            year.num = year.num + i.num
+            year.save()
 
-        # Kill off our items 
-        items.delete() 
+        # Kill off our items
+        items.delete()
