@@ -1,5 +1,6 @@
 import datetime
 from django.core.management.base import NoArgsCommand
+from django.core.exceptions import MultipleObjectsReturned
 
 from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
 
