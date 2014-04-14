@@ -1,10 +1,13 @@
 import datetime
+import logging
 from django.core.management.base import NoArgsCommand
 from django.core.exceptions import MultipleObjectsReturned
 
 from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
 
 from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_backend
+
+log = logging.getLogger(__name__)
 
 class Command(NoArgsCommand):
     help = "Aggregate Application Metrics"
