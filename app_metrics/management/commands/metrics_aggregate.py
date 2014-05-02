@@ -32,8 +32,13 @@ class Command(NoArgsCommand):
             try:
                 day,create = MetricDay.objects.get_or_create(metric=i.metric, created=i.created)
             except MultipleObjectsReturned:
-                log.exception("Multiple MetricDay found for Metric Item ({}) - {}".format(i.id, i))
-                raise
+                metrics = MetricDay.objects.filter(metric=i.metric)
+                if metrics.count() > 1 and metrics.count() < 4:
+                     metrics = metrics.exclude(id=metrics[0].id)
+                     metrics.delete()
+                else:
+                    print("Multiple MetricDay found for Metric Item ({}) - {}".format(i.id, i))
+                    raise
 
             day.num = day.num + i.num
             day.save()
@@ -43,8 +48,13 @@ class Command(NoArgsCommand):
             try:
                 week, create = MetricWeek.objects.get_or_create(metric=i.metric, created=week_date)
             except MultipleObjectsReturned:
-                log.exception("Multiple MetricWeek found for Metric Item ({}) - {}".format(i.id, i))
-                raise
+                metrics = MetricWeek.objects.filter(metric=i.metric)
+                if metrics.count() > 1 and metrics.count() < 4:
+                     metrics = metrics.exclude(id=metrics[0].id)
+                     metrics.delete()
+                else:
+                    print("Multiple MetricWeek found for Metric Item ({}) - {}".format(i.id, i))
+                    raise
 
             week.num = week.num + i.num
             week.save()
@@ -54,8 +64,14 @@ class Command(NoArgsCommand):
             try:
                 month, create = MetricMonth.objects.get_or_create(metric=i.metric, created=month_date)
             except MultipleObjectsReturned:
-                log.exception("Multiple MetricMonth found for Metric Item ({}) - {}".format(i.id, i))
-                raise
+                metrics = MetricMonth.objects.filter(metric=i.metric)
+                if metrics.count() > 1 and metrics.count() < 4:
+                     metrics = metrics.exclude(id=metrics[0].id)
+                     metrics.delete()
+                else:
+                    print("Multiple MetricMonth found for Metric Item ({}) - {}".format(i.id, i))
+                    raise
+
             month.num = month.num + i.num
             month.save()
 
@@ -64,8 +80,14 @@ class Command(NoArgsCommand):
             try:
                 year, create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
             except MultipleObjectsReturned:
-                log.exception("Multiple MetricYear found for Metric Item ({}) - {}".format(i.id, i))
-                raise
+                metrics = MetricYear.objects.filter(metric=i.metric)
+                if metrics.count() > 1 and metrics.count() < 4:
+                     metrics = metrics.exclude(id=metrics[0].id)
+                     metrics.delete()
+                else:
+                    print("Multiple MetricYear found for Metric Item ({}) - {}".format(i.id, i))
+                    raise
+
             year.num = year.num + i.num
             year.save()
 
