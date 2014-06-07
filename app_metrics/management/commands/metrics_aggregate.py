@@ -30,15 +30,17 @@ class Command(NoArgsCommand):
         for i in items:
             # Daily Aggregation
             try:
+                days = MetricDay.objects.filter(metric=i.metric, created=i.created)
+            except ObjectDoesNotExist:
                 day,create = MetricDay.objects.get_or_create(metric=i.metric, created=i.created)
-            except MultipleObjectsReturned:
-                metrics = MetricDay.objects.filter(metric=i.metric)
-                if metrics.count() > 1 and metrics.count() < 4:
-                     metrics = metrics.exclude(id=metrics[0].id)
-                     metrics.delete()
-                else:
-                    print("Multiple MetricDay found for Metric Item ({}) - {}".format(i.id, i))
-                    raise
+            else:
+                if days.count() > 1:
+                     days = days.exclude(id=days[0].id)
+                     days.delete()
+                try:
+                    day = days[0]
+                except IndexError:
+                    day,create = MetricDay.objects.get_or_create(metric=i.metric, created=i.created)
 
             day.num = day.num + i.num
             day.save()
@@ -46,15 +48,17 @@ class Command(NoArgsCommand):
             # Weekly Aggregation
             week_date = week_for_date(i.created)
             try:
-                week, create = MetricWeek.objects.get_or_create(metric=i.metric, created=week_date)
-            except MultipleObjectsReturned:
-                metrics = MetricWeek.objects.filter(metric=i.metric)
-                if metrics.count() > 1 and metrics.count() < 4:
-                     metrics = metrics.exclude(id=metrics[0].id)
-                     metrics.delete()
-                else:
-                    print("Multiple MetricWeek found for Metric Item ({}) - {}".format(i.id, i))
-                    raise
+                weeks = MetricWeek.objects.filter(metric=i.metric, created=week_date)
+            except ObjectDoesNotExist:
+                week,create = MetricWeek.objects.get_or_create(metric=i.metric, created=week_date)
+            else:
+                if weeks.count() > 1:
+                     weeks = weeks.exclude(id=weeks[0].id)
+                     weeks.delete()
+                try:
+                    week = weeks[0]
+                except IndexError:
+                    week,create = MetricWeek.objects.get_or_create(metric=i.metric, created=week_date)
 
             week.num = week.num + i.num
             week.save()
@@ -62,31 +66,32 @@ class Command(NoArgsCommand):
             # Monthly Aggregation
             month_date = month_for_date(i.created)
             try:
-                month, create = MetricMonth.objects.get_or_create(metric=i.metric, created=month_date)
-            except MultipleObjectsReturned:
-                metrics = MetricMonth.objects.filter(metric=i.metric)
-                if metrics.count() > 1 and metrics.count() < 4:
-                     metrics = metrics.exclude(id=metrics[0].id)
-                     metrics.delete()
-                else:
-                    print("Multiple MetricMonth found for Metric Item ({}) - {}".format(i.id, i))
-                    raise
-
-            month.num = month.num + i.num
-            month.save()
+                months = MetricMonth.objects.filter(metric=i.metric, created=month_date)
+            except ObjectDoesNotExist:
+                month,create = MetricMonth.objects.get_or_create(metric=i.metric, created=month_date)
+            else:
+                if months.count() > 1:
+                     months = months.exclude(id=months[0].id)
+                     months.delete()
+                try:
+                    month = months[0]
+                except IndexError:
+                    month,create = MetricMonth.objects.get_or_create(metric=i.metric, created=month_date)
 
             # Yearly Aggregation
             year_date = year_for_date(i.created)
             try:
-                year, create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
-            except MultipleObjectsReturned:
-                metrics = MetricYear.objects.filter(metric=i.metric)
-                if metrics.count() > 1 and metrics.count() < 4:
-                     metrics = metrics.exclude(id=metrics[0].id)
-                     metrics.delete()
-                else:
-                    print("Multiple MetricYear found for Metric Item ({}) - {}".format(i.id, i))
-                    raise
+                years = MetricYear.objects.filter(metric=i.metric, created=year_date)
+            except ObjectDoesNotExist:
+                years,create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
+            else:
+                if years.count() > 1:
+                     years = years.exclude(id=years[0].id)
+                     years.delete()
+                try:
+                    year = years[0]
+                except IndexError:
+                    years,create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
 
             year.num = year.num + i.num
             year.save()
