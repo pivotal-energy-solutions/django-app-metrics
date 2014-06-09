@@ -91,7 +91,7 @@ class Command(NoArgsCommand):
                 try:
                     year = years[0]
                 except IndexError:
-                    years,create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
+                    year,create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
 
             year.num = year.num + i.num
             year.save()
