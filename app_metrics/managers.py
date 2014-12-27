@@ -4,7 +4,6 @@
 from __future__ import unicode_literals
 
 import logging
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
 from apps.relationship.models import Relationship
