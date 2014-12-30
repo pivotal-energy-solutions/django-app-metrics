@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import logging
 from django.db import models
 from django.db.models import Q
-from apps.relationship.models import Relationship
 
 __author__ = 'Steven Klass'
 __date__ = '4/3/13 5:26 AM'
@@ -49,6 +48,7 @@ class MetricManager(models.Manager):
             return self.filter(metric__company=company, metric__name__in=names, **kwargs)
 
         # Everyone else should only see data for companies in which we have mutual relationships.
+        from apps.relationship.models import Relationship
         comps = Relationship.objects.get_reversed_companies(company, ids_only=True)
         # Who do I have a relationship with
         rels = company.relationships.get_companies(ids_only=True)
