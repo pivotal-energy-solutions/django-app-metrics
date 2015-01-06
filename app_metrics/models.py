@@ -170,7 +170,7 @@ class Gauge(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.updated = datetime.datetime.now()
+        self.updated = utcnow()
         if not self.id and not self.slug:
             self.slug = slugify(self.name)
             i = 0
