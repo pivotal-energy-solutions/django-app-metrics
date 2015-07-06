@@ -6,6 +6,7 @@ import datetime
 import logging
 import dateutil.parser
 from django.utils.timezone import now as utcnow
+import pytz
 
 log = logging.getLogger('celery.task')
 
@@ -54,7 +55,7 @@ def db_metric_task(num=1, **kwargs):
     created = kwargs.pop('created', utcnow())
     if isinstance(created, basestring):
         try:
-            created = dateutil.parser.parse(created)
+            created = dateutil.parser.parse(created).replace(tzinfo=pytz.utc)
         except:
             log.error("Unable to parse date from {}".format(created))
             created=utcnow()
