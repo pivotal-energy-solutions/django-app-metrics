@@ -1,9 +1,9 @@
 from contextlib import contextmanager
 import datetime
+from importlib import import_module
 import time
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.importlib import import_module
 
 from app_metrics.exceptions import InvalidMetricsBackend, TimerError
 from app_metrics.models import Metric, MetricSet
