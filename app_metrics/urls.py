@@ -6,8 +6,8 @@ from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricRep
 #   (r'^metrics/', include('app_metrics.urls', namespace='app_metrics', app_name='app_metrics')),
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^report/yearly/(?P<year>\d{4})/$', YearlyMetricReport.as_view(), name="yearly_metric_report"),
     url(r'^report/monthly/(?P<month>\w{3})/(?P<year>\d{4})/$', MonthlyMetricReport.as_view(), name="monthly_metric_report"),
     url(r'^reports/$', MetricReports.as_view(), name="metric_reports"),
-)
+]
