@@ -12,7 +12,7 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 class Metric(models.Model):
     """ The type of metric we want to store """
     name = models.CharField(_('name'), max_length=128)
-    company = models.ForeignKey('company.Company', blank=True, null=True)
+    company = models.ForeignKey('company.Company', blank=True, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(_('slug'), max_length=128, db_index=True)
 
     class Meta:
@@ -56,7 +56,7 @@ class MetricSet(models.Model):
 
 class MetricItem(models.Model):
     """ Individual metric items """
-    metric = models.ForeignKey(Metric, verbose_name=_('metric'))
+    metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
     num = models.IntegerField(_('number'), default=1)
     created = models.DateTimeField(_('created'), default=utcnow)
 
@@ -73,7 +73,7 @@ class MetricItem(models.Model):
 
 class MetricDay(models.Model):
     """ Aggregation of Metrics on a per day basis """
-    metric = models.ForeignKey(Metric, verbose_name=_('metric'))
+    metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
@@ -92,7 +92,7 @@ class MetricDay(models.Model):
 
 class MetricWeek(models.Model):
     """ Aggregation of Metrics on a weekly basis """
-    metric = models.ForeignKey(Metric, verbose_name=_('metric'))
+    metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
@@ -112,7 +112,7 @@ class MetricWeek(models.Model):
 
 class MetricMonth(models.Model):
     """ Aggregation of Metrics on monthly basis """
-    metric = models.ForeignKey(Metric, verbose_name=('metric'))
+    metric = models.ForeignKey(Metric, verbose_name=('metric'), on_delete=models.CASCADE)
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
@@ -133,7 +133,7 @@ class MetricMonth(models.Model):
 
 class MetricYear(models.Model):
     """ Aggregation of Metrics on a yearly basis """
-    metric = models.ForeignKey(Metric, verbose_name=_('metric'))
+    metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
     num = models.BigIntegerField(_('number'), default=0)
     created = models.DateField(_('created'), default=datetime.date.today)
 
@@ -156,7 +156,7 @@ class Gauge(models.Model):
     A representation of the current state of some data.
     """
     name = models.CharField(_('name'), max_length=128)
-    company = models.ForeignKey('company.Company', blank=True, null=True)
+    company = models.ForeignKey('company.Company', blank=True, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(_('slug'), max_length=128)
     current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
     created = models.DateTimeField(_('created'), default=utcnow)
