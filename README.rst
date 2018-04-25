@@ -23,6 +23,11 @@ You then group these individual metrics into a MetricSet, where you define
 how often you want an email report being sent, and to which User(s) it should
 be sent.
 
+Notes
+=====
+_This fork provides for changes specifically for Pivotal Energy Solutions_
+
+
 Documentation
 =============
 
