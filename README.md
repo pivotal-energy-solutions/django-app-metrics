@@ -1,6 +1,4 @@
-
-Django App Metrics
-==================
+# Django App Metrics
 
 django-app-metrics allows you to capture and report on various events in your
 applications.  You simply define various named metrics and record when they
@@ -19,35 +17,23 @@ You then group these individual metrics into a MetricSet, where you define
 how often you want an email report being sent, and to which User(s) it should
 be sent.
 
-Notes
-=====
+### Notes
 _This fork provides for changes specifically for Pivotal Energy Solutions_
 
+## Documentation
 
-Documentation
-=============
+Documentation can be found at [ReadTheDocs](http://django-app-metrics.readthedocs.org)
 
-Documentation can be found at ReadTheDocs_.
+## Requirements
 
-.. _ReadTheDocs: http://django-app-metrics.readthedocs.org/
-
-Requirements
-============
-
-Celery_ and `django-celery`_ must be installed, however if you do not wish to
-actually use Celery you can simply set ``CELERY_ALWAYS_EAGER = True`` in your
+[Celery](http://celeryproject.org/) and [django-celery](http://ask.github.com/django-celery/)
+must be installed, however if you do not wish to actually use Celery you can
+simply set ``CELERY_ALWAYS_EAGER = True`` in your
 settings and it will behave as if Celery was not configured.
 
-.. _Celery: http://celeryproject.org/
-.. _`django-celery`: http://ask.github.com/django-celery/
+## Usage
 
-Django 1.2 and above
-
-Usage
-=====
-
-::
-
+```python
   from app_metrics.utils import create_metric, metric, timing, Timer, gauge
 
   # Create a new metric to track
@@ -89,9 +75,9 @@ Usage
   # These simply store and retrieve a value
   gauge('current_fuel', '30')
   guage('load_load', '3.14')
+```
 
-Backends
-========
+## Backends
 
 ``app_metrics.backends.db`` (Default) - This backend stores all metrics and
 aggregations in your database. NOTE: Every call to ``metric()`` generates a
@@ -99,28 +85,23 @@ database write, which may decrease your overall performance is you go nuts
 with them or have a heavily traffic site.
 
 ``app_metrics.backends.mixpanel`` - This backend allows you to pipe all of
-your calls to ``metric()`` to Mixpanel. See the `Mixpanel documentation`_
+your calls to ``metric()`` to Mixpanel. See the [Mixpanel documentation](http://mixpanel.com/docs/api-documentation)
 for more information on their API.
 
-.. _`Mixpanel documentation`: http://mixpanel.com/docs/api-documentation
 
 ``app_metrics.backends.statsd`` - This backend allows you to pipe all of your
-calls to ``metric()`` to a statsd server. See `statsd`_ for more information
+calls to ``metric()`` to a statsd server. See [statsd](https://github.com/etsy/statsd) for more information
 on their API.
 
-.. _`statsd`: https://github.com/etsy/statsd
 
 ``app_metrics.backends.redis`` - This backend allows you to use the metric() and
 gauge() aspects, but not timer aspects of app_metrics.
 
 ``app_metrics.backends.librato_backend`` - This backend lets you send metrics to
-Librato. See the `Librato documentation`_ for more information on their API.
-This requires the `Librato library`_. It uses use a librato Gauge by default,
+Librato. See the [Librato documentation](http://dev.librato.com/v1/metrics#metrics) for more information on their API.
+This requires the [Librato library]( http://pypi.python.org/pypi/librato/0.2). It uses use a librato Gauge by default,
 although this can be overridden by supplying ``metric_type="counter"`` as a
 keyword arg to ``metric()``.
-
-.. _`Librato documentation`: http://dev.librato.com/v1/metrics#metrics
-.. _`Librato library`: http://pypi.python.org/pypi/librato/0.2
 
 ``app_metrics.backends.composite`` - This backend lets you compose multiple
 backends to which metric-calls are handed. The backends to which the call is
@@ -131,8 +112,7 @@ can be overridden in each call by supplying a ``backends`` keyword argument::
                                     'app_metrics.backends.db'])
 
 
-Settings
-========
+## Settings
 
 ``APP_METRICS_BACKEND`` - Defaults to 'app_metrics.backends.db' if not defined.
 
@@ -142,16 +122,16 @@ no activity today (i.e. during testing). Defaults to `True`.
 ``APP_METRICS_DISABLED`` - If `True`, do not track metrics, useful for
 debugging. Defaults to `False`.
 
-Mixpanel Settings
------------------
+### Mixpanel Settings
+
 Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.mixpanel'.
 
 ``APP_METRICS_MIXPANEL_TOKEN`` - Your Mixpanel.com API token
 
 ``APP_METRICS_MIXPANEL_URL`` - Allow overriding of the API URL end point
 
-Statsd Settings
----------------
+### Statsd Settings
+
 Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.statsd'.
 
 ``APP_METRICS_STATSD_HOST`` - Hostname of statsd server, defaults to 'localhost'
@@ -160,8 +140,8 @@ Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.statsd'.
 
 ``APP_METRICS_STATSD_SAMPLE_RATE`` - statsd sample rate, defaults to 1
 
-Redis Settings
---------------
+### Redis Settings
+
 Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.redis'.
 
 ``APP_METRICS_REDIS_HOST`` - Hostname of redis server, defaults to 'localhost'
@@ -170,8 +150,8 @@ Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.redis'.
 
 ``APP_METRICS_REDIS_DB`` - redis database number to use, defaults to 0
 
-Librato Settings
-----------------
+### Librato Settings
+
 Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.librato'.
 
 ``APP_METRICS_LIBRATO_USER`` - Librato username
@@ -180,8 +160,8 @@ Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.librato'.
 
 ``APP_METRICS_LIBRATO_SOURCE`` - Librato data source (e.g. 'staging', 'dev'...)
 
-Composite Backend Settings
---------------------------
+### Composite Backend Settings
+
 Set ``APP_METRICS_BACKEND`` == 'app_metrics.backends.composite'.
 
 ``APP_METRICS_COMPOSITE_BACKENDS`` - List of backends that are used by default,
@@ -189,8 +169,7 @@ e.g.::
 
     APP_METRICS_COMPOSITE_BACKENDS = ('librato', 'db', 'my_custom_backend',)
 
-Running the tests
-=================
+## Running the tests
 
 To run the tests you'll need some requirements installed, so run::
 
@@ -200,8 +179,13 @@ Then simply run::
 
     django-admin.py test --settings=app_metrics.tests.settings
 
-TODO
-----
+## TODO
 
 - Improve text and HTML templates to display trending data well
 
+
+### Build Process:
+1.  Update the `__version_info__` inside of the application. Commit and push.
+2.  Tag the release with the version. `git tag <version> -m "Release"; git push --tags`
+3.  Build the release `rm -rf dist build *egg-info; python setup.py sdist bdist_wheel`
+4.  Upload the data `twine upload dist/*`
