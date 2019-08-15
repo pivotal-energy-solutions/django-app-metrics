@@ -18,7 +18,6 @@ how often you want an email report being sent, and to which User(s) it should
 be sent.
 
 ### Notes
-_This fork provides for changes specifically for Pivotal Energy Solutions_
 
 ## Documentation
 
@@ -33,49 +32,6 @@ settings and it will behave as if Celery was not configured.
 
 ## Usage
 
-```python
-  from app_metrics.utils import create_metric, metric, timing, Timer, gauge
-
-  # Create a new metric to track
-  my_metric = create_metric(name='New User Metric', slug='new_user_signup')
-
-  # Create a MetricSet which ties a metric to an email schedule and sets
-  # who should receive it
-  my_metric_set = create_metric_set(name='My Set',
-                                    metrics=[my_metric],
-                                    email_recipients=[user1, user2])
-
-  # Increment the metric by one
-  metric('new_user_signup')
-
-  # Increment the metric by some other number
-  metric('new_user_signup', 4)
-
-  # Aggregate metric items into daily, weekly, monthly, and yearly totals
-  # It's fairly smart about it, so you're safe to run this as often as you
-  # like
-  manage.py metrics_aggregate
-
-  # Send email reports to users
-  manage.py metrics_send_mail
-
-  # Create a timer (only supported in statsd backend currently)
-  with timing('mytimer'):
-    for x in some_long_list:
-       call_time_consuming_function(x)
-
-  # Or if a context manager doesn't work for you you can use a Timer class
-  t = Timer()
-  t.start()
-  something_that_takes_forever()
-  t.stop()
-  t.store('mytimer')
-
-  # Gauges are current status type dials (think fuel gauge in a car)
-  # These simply store and retrieve a value
-  gauge('current_fuel', '30')
-  guage('load_load', '3.14')
-```
 
 ## Backends
 
