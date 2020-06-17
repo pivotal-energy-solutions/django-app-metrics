@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='name')),
                 ('slug', models.SlugField(max_length=128, verbose_name='slug')),
-                ('current_value', models.DecimalField(decimal_places=6, default=b'0.00', max_digits=15, verbose_name='current value')),
+                ('current_value', models.DecimalField(decimal_places=6, default=0.00, max_digits=15, verbose_name='current value')),
                 ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
                 ('updated', models.DateTimeField(default=django.utils.timezone.now, verbose_name='updated')),
             ],
