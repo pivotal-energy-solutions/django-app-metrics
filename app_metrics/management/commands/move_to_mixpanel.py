@@ -4,6 +4,7 @@ from app_metrics.models import MetricItem
 from app_metrics.backends.mixpanel import metric
 from app_metrics.utils import get_backend
 
+
 class Command(BaseCommand):
     help = "Move MetricItems from the db backend to MixPanel"
 
@@ -16,7 +17,7 @@ class Command(BaseCommand):
 
         # If not using Mixpanel this command is a NOOP
         if backend != 'app_metrics.backends.mixpanel':
-            print "You need to set the backend to MixPanel"
+            print("You need to set the backend to MixPanel")
             return
 
         items = MetricItem.objects.all()

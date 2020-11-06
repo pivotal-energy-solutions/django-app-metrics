@@ -11,6 +11,7 @@ from app_metrics.reports import generate_report
 from app_metrics.models import MetricSet, Metric 
 from app_metrics.utils import get_backend 
 
+
 class Command(BaseCommand):
     help = "Send Report E-mails" 
     requires_model_validation = True 
@@ -26,7 +27,7 @@ class Command(BaseCommand):
 
         # This command is a NOOP if using the Mixpanel backend 
         if backend == 'app_metrics.backends.mixpanel': 
-            print "Useless use of metrics_send_email when using Mixpanel backend."
+            print("Useless use of metrics_send_email when using Mixpanel backend.")
             return 
 
         # Determine if we should also send any weekly or monthly reports 

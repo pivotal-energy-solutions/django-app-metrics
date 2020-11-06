@@ -4,7 +4,7 @@ from app_metrics.tests.mixpanel_tests import *
 try:
     import statsd
 except ImportError:
-    print "Skipping the statsd tests."
+    print("Skipping the statsd tests.")
     statsd = None
 
 if statsd is not None:
@@ -13,7 +13,7 @@ if statsd is not None:
 try:
     import redis
 except ImportError:
-    print "Skipping redis tests."
+    print("Skipping redis tests.")
     redis = None
 
 if redis is not None:
@@ -22,7 +22,7 @@ if redis is not None:
 #try:
 #    import librato
 #except ImportError:
-#    print "Skipping librato tests..."
+#    print("Skipping librato tests...")
 #    librato = None
 #
 #if librato is not None:
