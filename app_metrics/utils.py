@@ -85,7 +85,7 @@ def get_or_create_metric(**kwargs):
     # This should be a NOOP for the non-database-backed backends
     if not should_create_models():
         return
-    print(kwargs)
+
     metric, created = Metric.objects.get_or_create(**kwargs)
     return metric
 

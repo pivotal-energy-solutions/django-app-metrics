@@ -1,0 +1,138 @@
+action: GLOB, msg: packaging
+cwd: /Users/steven/Development/django-app-metrics
+cmd: /Users/steven/Development/django-app-metrics/.venv/bin/python setup.py sdist --formats=zip --dist-dir .tox/dist
+running sdist
+running egg_info
+creating pivotal_app_metrics.egg-info
+writing pivotal_app_metrics.egg-info/PKG-INFO
+writing dependency_links to pivotal_app_metrics.egg-info/dependency_links.txt
+writing requirements to pivotal_app_metrics.egg-info/requires.txt
+writing top-level names to pivotal_app_metrics.egg-info/top_level.txt
+writing manifest file 'pivotal_app_metrics.egg-info/SOURCES.txt'
+reading manifest file 'pivotal_app_metrics.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'pivotal_app_metrics.egg-info/SOURCES.txt'
+running check
+creating pivotal_app_metrics-2.0.0
+creating pivotal_app_metrics-2.0.0/app_metrics
+creating pivotal_app_metrics-2.0.0/app_metrics/backends
+creating pivotal_app_metrics-2.0.0/app_metrics/management
+creating pivotal_app_metrics-2.0.0/app_metrics/management/commands
+creating pivotal_app_metrics-2.0.0/app_metrics/migrations
+creating pivotal_app_metrics-2.0.0/app_metrics/templates
+creating pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+creating pivotal_app_metrics-2.0.0/app_metrics/tests
+creating pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+copying files to pivotal_app_metrics-2.0.0...
+copying LICENSE.txt -> pivotal_app_metrics-2.0.0
+copying MANIFEST.in -> pivotal_app_metrics-2.0.0
+copying README.md -> pivotal_app_metrics-2.0.0
+copying setup.cfg -> pivotal_app_metrics-2.0.0
+copying setup.py -> pivotal_app_metrics-2.0.0
+copying app_metrics/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/admin.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/exceptions.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/managers.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/models.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/reports.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/tasks.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/trending.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/urls.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/utils.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/views.py -> pivotal_app_metrics-2.0.0/app_metrics
+copying app_metrics/backends/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/composite.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/db.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/librato.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/mixpanel.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/redis.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/backends/statsd.py -> pivotal_app_metrics-2.0.0/app_metrics/backends
+copying app_metrics/management/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics/management
+copying app_metrics/management/commands/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics/management/commands
+copying app_metrics/management/commands/metrics_aggregate.py -> pivotal_app_metrics-2.0.0/app_metrics/management/commands
+copying app_metrics/management/commands/metrics_send_mail.py -> pivotal_app_metrics-2.0.0/app_metrics/management/commands
+copying app_metrics/management/commands/move_to_mixpanel.py -> pivotal_app_metrics-2.0.0/app_metrics/management/commands
+copying app_metrics/management/commands/move_to_statsd.py -> pivotal_app_metrics-2.0.0/app_metrics/management/commands
+copying app_metrics/migrations/0001_initial.py -> pivotal_app_metrics-2.0.0/app_metrics/migrations
+copying app_metrics/migrations/0002_auto_20181008_1758.py -> pivotal_app_metrics-2.0.0/app_metrics/migrations
+copying app_metrics/migrations/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics/migrations
+copying app_metrics/templates/app_metrics/email.html -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/templates/app_metrics/email.txt -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/templates/app_metrics/metric_report.html -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/templates/app_metrics/metric_report_breadcrumbs.html -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/templates/app_metrics/metric_report_content.html -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/templates/app_metrics/metric_reports.html -> pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics
+copying app_metrics/tests/__init__.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying app_metrics/tests/base_tests.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying app_metrics/tests/mixpanel_tests.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying app_metrics/tests/redis_tests.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying app_metrics/tests/statsd_tests.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying app_metrics/tests/urls.py -> pivotal_app_metrics-2.0.0/app_metrics/tests
+copying pivotal_app_metrics.egg-info/PKG-INFO -> pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+copying pivotal_app_metrics.egg-info/SOURCES.txt -> pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+copying pivotal_app_metrics.egg-info/dependency_links.txt -> pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+copying pivotal_app_metrics.egg-info/requires.txt -> pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+copying pivotal_app_metrics.egg-info/top_level.txt -> pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info
+Writing pivotal_app_metrics-2.0.0/setup.cfg
+creating '.tox/dist/pivotal_app_metrics-2.0.0.zip' and adding 'pivotal_app_metrics-2.0.0' to it
+adding 'pivotal_app_metrics-2.0.0'
+adding 'pivotal_app_metrics-2.0.0/app_metrics'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info'
+adding 'pivotal_app_metrics-2.0.0/PKG-INFO'
+adding 'pivotal_app_metrics-2.0.0/MANIFEST.in'
+adding 'pivotal_app_metrics-2.0.0/README.md'
+adding 'pivotal_app_metrics-2.0.0/setup.py'
+adding 'pivotal_app_metrics-2.0.0/setup.cfg'
+adding 'pivotal_app_metrics-2.0.0/LICENSE.txt'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/migrations'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tasks.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/models.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/trending.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/admin.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/utils.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/reports.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/exceptions.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/urls.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/views.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/managers.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/migrations/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/migrations/0002_auto_20181008_1758.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/migrations/0001_initial.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/db.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/librato.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/mixpanel.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/redis.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/composite.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/backends/statsd.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/base_tests.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/mixpanel_tests.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/statsd_tests.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/redis_tests.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/tests/urls.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands/__init__.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands/move_to_mixpanel.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands/metrics_send_mail.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands/metrics_aggregate.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/management/commands/move_to_statsd.py'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/metric_report_breadcrumbs.html'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/email.html'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/email.txt'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/metric_reports.html'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/metric_report.html'
+adding 'pivotal_app_metrics-2.0.0/app_metrics/templates/app_metrics/metric_report_content.html'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info/PKG-INFO'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info/SOURCES.txt'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info/requires.txt'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info/top_level.txt'
+adding 'pivotal_app_metrics-2.0.0/pivotal_app_metrics.egg-info/dependency_links.txt'
+removing 'pivotal_app_metrics-2.0.0' (and everything under it)
