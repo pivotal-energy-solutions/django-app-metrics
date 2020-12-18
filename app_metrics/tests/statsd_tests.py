@@ -1,17 +1,28 @@
+# -*- coding: utf-8 -*-
 from decimal import Decimal
+from unittest import skipIf
+
 import mock
 import time
 from django.test import TestCase
 from django.conf import settings
 from app_metrics.utils import metric, timing, gauge
 
+try:
+    import statsd
+    skip_tests = False
+except ImportError:
+    skip_tests = True
+
 
 class StatsdCreationTests(TestCase):
+
     def setUp(self):
         super(StatsdCreationTests, self).setUp()
         self.old_backend = getattr(settings, 'APP_METRICS_BACKEND', None)
         settings.APP_METRICS_BACKEND = 'app_metrics.backends.statsd'
 
+    @skipIf(skip_tests, 'Missing statsd')
     def test_metric(self):
         with mock.patch('statsd.Client') as mock_client:
             instance = mock_client.return_value
@@ -26,6 +37,7 @@ class StatsdCreationTests(TestCase):
             metric('another', 4)
             mock_client._send.assert_called_with(mock.ANY, {'another': '4|c'})
 
+    @skipIf(skip_tests, 'Missing statsd')
     def test_timing(self):
         with mock.patch('statsd.Client') as mock_client:
             instance = mock_client.return_value
@@ -36,6 +48,7 @@ class StatsdCreationTests(TestCase):
 
             mock_client._send.assert_called_with(mock.ANY, {'testing.total': mock.ANY})
 
+    @skipIf(skip_tests, 'Missing statsd')
     def test_gauge(self):
         with mock.patch('statsd.Client') as mock_client:
             instance = mock_client.return_value

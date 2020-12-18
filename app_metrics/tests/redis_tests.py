@@ -1,7 +1,18 @@
+# -*- coding: utf-8 -*-
+from unittest import skipIf
+
 import mock
 from django.test import TestCase
 from django.conf import settings
 from app_metrics.utils import metric, gauge
+
+
+try:
+    import redis
+    skip_tests = False
+except ImportError:
+    skip_tests = True
+
 
 class RedisTests(TestCase):
     def setUp(self):
@@ -13,6 +24,7 @@ class RedisTests(TestCase):
         settings.APP_METRICS_BACKEND = self.old_backend
         super(RedisTests, self).tearDown()
 
+    @skipIf(skip_tests, 'Missing redis')
     def test_metric(self):
         with mock.patch('redis.client.StrictRedis') as mock_client:
             instance = mock_client.return_value
@@ -21,11 +33,11 @@ class RedisTests(TestCase):
             metric('foo')
             mock_client._send.asert_called_with(mock.ANY, {'slug':'foo', 'num':'1'})
 
+    @skipIf(skip_tests, 'Missing redis')
     def test_gauge(self):
         with mock.patch('redis.client.StrictRedis') as mock_client:
             instance = mock_client.return_value
             instance._send.return_value = 1
 
-            gauge('testing', 10.5)
+            gauge(current_value=10.5)
             mock_client._send.asert_called_with(mock.ANY, {'slug':'testing', 'current_value':'10.5'})
-

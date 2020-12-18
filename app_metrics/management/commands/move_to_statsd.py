@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 from django.core.management.base import BaseCommand
 from app_metrics.models import MetricItem
@@ -5,7 +6,7 @@ from app_metrics.backends.statsd_backend import metric
 
 
 class Command(BaseCommand):
-    help = "Move MetricItems from the db backend to statsd"
+    help = 'Move MetricItems from the db backend to statsd'
     requires_model_validation = True
 
     def handle(self, **options):

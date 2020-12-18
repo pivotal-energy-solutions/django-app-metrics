@@ -20,7 +20,7 @@ class MetricManager(models.Manager):
     def filter_by_company(self, company, **kwargs):
         """A way to trim down the list of objects by company"""
         from apps.company.models import Company
-        assert isinstance(company, Company), "Need a Company"
+        assert isinstance(company, Company), 'Need a Company'
         return self.filter(metric__company=company, **kwargs)
 
     def filter_by_user(self, user, **kwargs):
@@ -34,17 +34,17 @@ class MetricManager(models.Manager):
     def filter_certifications_by_user(self, user, **kwargs):
         """A way to trim down the list of objects by company"""
 
-        name = kwargs.pop("name", None)
+        name = kwargs.pop('name', None)
         names = [name] if name else []
         from apps.eep_program.models import EEPProgram
         if not len(names):
             names = EEPProgram.objects.filter_by_user(user).values_list('name', flat=True)
-            names = ["EEP {} Certifications".format(name) for name in names]
+            names = ['EEP {} Certifications'.format(name) for name in names]
 
         if user.is_superuser:
             return self.filter(metric__name__in=names, **kwargs)
         company = user.company
-        if company.company_type in ["rater", "hvac", "qa", "provider"]:
+        if company.company_type in ['rater', 'hvac', 'qa', 'provider']:
             return self.filter(metric__company=company, metric__name__in=names, **kwargs)
 
         # Everyone else should only see data for companies in which we have mutual relationships.

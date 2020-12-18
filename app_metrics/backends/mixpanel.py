@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Backend to handle sending app metrics directly to mixpanel.com
 # See http://mixpanel.com/api/docs/ for more information on their API
 

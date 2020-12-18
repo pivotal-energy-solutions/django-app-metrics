@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.views.generic.dates import  MonthArchiveView, YearArchiveView
@@ -33,7 +34,7 @@ class BaseMetricReport(BaseReport):
     date_header_fields = 'date_headers'
     make_object_list = True
     context_object_name = 'metrics'
-    
+
     @staticmethod
     def create_date_range(range_type, start_date, end_date):
         return rrule(range_type, dtstart=start_date, until=end_date)
@@ -68,7 +69,7 @@ class BaseMetricReport(BaseReport):
         # format our date list
         context['date_list'] = [ d.strftime(getattr(self, 'format_string')) for d in context['date_list'] ]
         # sort metric entries are by date as well
-        for m in metrics.keys():  
+        for m in metrics.keys():
             metrics[m] = metrics[m].values()  # flatten this dict out
             metrics[m].sort(key=attrgetter('created'))
         context[BaseMetricReport.context_object_name] = metrics.items() # calling items here to make the template cleaner/template didnt like calling items in there
@@ -78,8 +79,8 @@ class BaseMetricReport(BaseReport):
 class MonthlyMetricReport(BaseMetricReport, MonthArchiveView):
     queryset = MetricDay.objects.all()  # django generic view expects this
     # below members are used internally
-    klass = MetricDay  
-    format_string = "%m/%d"
+    klass = MetricDay
+    format_string = '%m/%d'
     title = 'Monthly Metric Report'
     date_grouping_attr = 'day'
 
@@ -95,7 +96,7 @@ class MonthlyMetricReport(BaseMetricReport, MonthArchiveView):
 class YearlyMetricReport(BaseMetricReport, YearArchiveView):
     klass = MetricMonth
     queryset = MetricMonth.objects.all()
-    format_string = "%B"
+    format_string = '%B'
     title = 'Yearly Metric Report'
     date_grouping_attr = 'month'
 

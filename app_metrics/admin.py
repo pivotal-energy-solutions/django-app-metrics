@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 
 from app_metrics.models import (Metric, MetricSet, MetricItem, MetricDay,
@@ -6,7 +7,7 @@ from app_metrics.models import (Metric, MetricSet, MetricItem, MetricDay,
 
 
 class MetricAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'slug', 'num')
+    list_display = ('__str__', 'slug', 'num')
     list_filter = ['metric__name']
 
     def slug(self, obj):

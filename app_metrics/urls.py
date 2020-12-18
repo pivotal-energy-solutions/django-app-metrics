@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import url
 from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricReports
 
@@ -7,7 +8,7 @@ from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricRep
 
 app_name = 'app_metrics'
 urlpatterns = [
-    url(r'^report/yearly/(?P<year>\d{4})/$', YearlyMetricReport.as_view(), name="yearly_metric_report"),
-    url(r'^report/monthly/(?P<month>\w{3})/(?P<year>\d{4})/$', MonthlyMetricReport.as_view(), name="monthly_metric_report"),
-    url(r'^reports/$', MetricReports.as_view(), name="metric_reports"),
+    url(r'^report/yearly/(?P<year>\d{4})/$', YearlyMetricReport.as_view(), name='yearly_metric_report'),
+    url(r'^report/monthly/(?P<month>\w{3})/(?P<year>\d{4})/$', MonthlyMetricReport.as_view(), name='monthly_metric_report'),
+    url(r'^reports/$', MetricReports.as_view(), name='metric_reports'),
 ]

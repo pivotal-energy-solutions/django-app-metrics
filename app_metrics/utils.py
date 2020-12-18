@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from contextlib import contextmanager
 import datetime
 from importlib import import_module
@@ -24,7 +25,8 @@ def should_create_models(backend=None):
     return backend == 'app_metrics.backends.db'
 
 
-def create_metric_set(name=None, metrics=None, email_recipients=None,
+def create_metric_set(
+        name=None, metrics=None, email_recipients=None,
         no_email=False, send_daily=True, send_weekly=False,
         send_monthly=False):
     """ Create a metric set """
@@ -35,11 +37,11 @@ def create_metric_set(name=None, metrics=None, email_recipients=None,
 
     try:
         metric_set = MetricSet(
-                            name=name,
-                            no_email=no_email,
-                            send_daily=send_daily,
-                            send_weekly=send_weekly,
-                            send_monthly=send_monthly)
+            name=name,
+            no_email=no_email,
+            send_daily=send_daily,
+            send_weekly=send_weekly,
+            send_monthly=send_monthly)
         metric_set.save()
 
         for m in metrics:
@@ -53,6 +55,7 @@ def create_metric_set(name=None, metrics=None, email_recipients=None,
 
     return metric_set
 
+
 def create_metric(**kwargs):
     """ Create a new type of metric to track """
 
@@ -61,7 +64,7 @@ def create_metric(**kwargs):
         return
 
     # See if this metric already exists
-    assert len(kwargs.keys()), "Missing keys"
+    assert len(kwargs.keys()), 'Missing keys'
 
     existing = Metric.objects.filter(**kwargs)
     if existing:
@@ -70,6 +73,7 @@ def create_metric(**kwargs):
         new_metric = Metric(**kwargs)
         new_metric.save()
         return new_metric
+
 
 def get_or_create_metric(**kwargs):
     """
@@ -80,7 +84,7 @@ def get_or_create_metric(**kwargs):
     # This should be a NOOP for the non-database-backed backends
     if not should_create_models():
         return
-
+    print(kwargs)
     metric, created = Metric.objects.get_or_create(**kwargs)
     return metric
 
@@ -105,9 +109,10 @@ def metric(num=1, **kwargs):
         backend.metric(num, **kwargs)
     except ObjectDoesNotExist:
         if 'name' not in kwargs.keys() and 'name' not in kwargs.get('defaults', {}).keys():
-            kwargs['name'] = "AutoCreated Metric"
+            kwargs['name'] = 'AutoCreated Metric'
         metric = create_metric(**kwargs)
         backend.metric(num, metric.as_dict())
+
 
 class Timer(object):
     """
@@ -130,6 +135,7 @@ class Timer(object):
         timer.store()
 
     """
+
     def __init__(self):
         self._start = None
         self._elapsed = None
@@ -198,11 +204,14 @@ def gauge(current_value, **kwargs):
 def week_for_date(date):
     return date - datetime.timedelta(days=date.weekday())
 
+
 def month_for_date(month):
-    return month - datetime.timedelta(days=month.day-1)
+    return month - datetime.timedelta(days=month.day - 1)
+
 
 def year_for_date(year):
     return datetime.date(year.year, 1, 1)
+
 
 def get_previous_month(date):
     if date.month == 1:
@@ -213,7 +222,7 @@ def get_previous_month(date):
 
     return new.replace(month=month_change)
 
+
 def get_previous_year(date):
     new = date
-    return new.replace(year=new.year-1)
-
+    return new.replace(year=new.year - 1)

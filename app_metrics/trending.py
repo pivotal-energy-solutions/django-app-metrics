@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -60,7 +61,7 @@ def _trending_for_yesterday(metric=None):
     except ObjectDoesNotExist:
         pass
 
-    try: 
+    try:
         previous_week = MetricDay.objects.get(metric=metric, created=previous_week_date)
         data['previous_week'] = previous_week.num
     except ObjectDoesNotExist:

@@ -33,4 +33,3 @@ Backends
 
     This backend allows you to use the metric() and gauge() aspects, but not
     timer aspects of app_metrics.
-

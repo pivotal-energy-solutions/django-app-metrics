@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from app_metrics.tasks import db_metric_task, db_gauge_task
 
 
