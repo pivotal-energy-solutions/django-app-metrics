@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'company',
-    'app_metrics'
+    'company.apps.CompanyConfig',
+    'eep_program.apps.EEPProgramConfig',
+    'relationship.apps.RelationshipConfig',
+    'app_metrics',
 ]
 
 MIDDLEWARE = [

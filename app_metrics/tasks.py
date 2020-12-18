@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
 import json
-import urllib
 import datetime
 import logging
 from urllib.parse import urlencode
@@ -10,8 +9,6 @@ from urllib.request import Request, urlopen
 import dateutil.parser
 from django.utils.timezone import now as utcnow
 import pytz
-
-log = logging.getLogger('celery.task')
 
 from celery import shared_task
 
@@ -32,7 +29,7 @@ except ImportError:
 # For redis support
 try:
     import redis
-except:
+except ImportError:
     redis = None
 
 # For librato support
@@ -42,6 +39,9 @@ try:
     from librato.metrics import Counter as LibratoCounter
 except ImportError:
     librato = None
+
+log = logging.getLogger('celery.task')
+
 
 class MixPanelTrackError(Exception):
     pass
@@ -56,9 +56,9 @@ def db_metric_task(num=1, **kwargs):
     if isinstance(created, str):
         try:
             created = dateutil.parser.parse(created).replace(tzinfo=pytz.utc)
-        except:
-            log.error('Unable to parse date from {}'.format(created))
-            created=utcnow()
+        except Exception as err:
+            log.error('Unable to parse date from {} - {}'.format(created, err))
+            created = utcnow()
     try:
         met, _ = Metric.objects.get_or_create(**kwargs)
         MetricItem.objects.create(metric=met, num=num, created=created)
@@ -91,16 +91,17 @@ def _get_token():
     token = getattr(settings, 'APP_METRICS_MIXPANEL_TOKEN', None)
 
     if not token:
-        raise ImproperlyConfigured('You must define APP_METRICS_MIXPANEL_TOKEN when using the mixpanel backend.')
+        raise ImproperlyConfigured(
+            'You must define APP_METRICS_MIXPANEL_TOKEN when using the mixpanel backend.')
     else:
         return token
+
 
 # Mixpanel tasks
 
 
 @shared_task
 def mixpanel_metric_task(slug, num, properties=None, **kwargs):
-
     token = _get_token()
     if properties is None:
         properties = dict()
@@ -162,6 +163,7 @@ def statsd_gauge_task(slug, current_value, **kwargs):
     # We send nothing here, since we only have one name/slug to work with here.
     gauge.send('', current_value)
 
+
 # Redis tasks
 
 def get_redis_conn():
@@ -201,6 +203,7 @@ def redis_gauge_task(slug, current_value, **kwargs):
     # of having a gauge and metric of the same name
     r = get_redis_conn()
     r.set('g:%s' % slug, current_value)
+
 
 # Librato tasks
 

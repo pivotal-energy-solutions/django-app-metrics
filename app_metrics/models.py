@@ -10,6 +10,7 @@ from django.utils.timezone import now as utcnow
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+
 class Metric(models.Model):
     """ The type of metric we want to store """
     name = models.CharField(_('name'), max_length=128)
@@ -39,6 +40,7 @@ class Metric(models.Model):
                     break
         return super(Metric, self).save(*args, **kwargs)
 
+
 class MetricSet(models.Model):
     """ A set of metrics that should be sent via email to certain users """
     name = models.CharField(_('name'), max_length=128)
@@ -56,6 +58,7 @@ class MetricSet(models.Model):
     def __str__(self):
         return self.name
 
+
 class MetricItem(models.Model):
     """ Individual metric items """
     metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
@@ -72,6 +75,7 @@ class MetricItem(models.Model):
             'num': self.num,
             'created': self.created
         }
+
 
 class MetricDay(models.Model):
     """ Aggregation of Metrics on a per day basis """
@@ -92,6 +96,7 @@ class MetricDay(models.Model):
             'created': self.created
         }
 
+
 class MetricWeek(models.Model):
     """ Aggregation of Metrics on a weekly basis """
     metric = models.ForeignKey(Metric, verbose_name=_('metric'), on_delete=models.CASCADE)
@@ -111,6 +116,7 @@ class MetricWeek(models.Model):
             'week': self.created.strftime('%U'),
             'year': self.created.strftime('%Y')
         }
+
 
 class MetricMonth(models.Model):
     """ Aggregation of Metrics on monthly basis """
@@ -160,7 +166,8 @@ class Gauge(models.Model):
     name = models.CharField(_('name'), max_length=128)
     company = models.ForeignKey('company.Company', blank=True, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(_('slug'), max_length=128)
-    current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
+    current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6,
+                                        default='0.00')
     created = models.DateTimeField(_('created'), default=utcnow)
     updated = models.DateTimeField(_('updated'), default=utcnow)
 

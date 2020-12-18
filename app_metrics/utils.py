@@ -50,7 +50,8 @@ def create_metric_set(
         for e in email_recipients:
             metric_set.email_recipients.add(e)
 
-    except:
+    except Exception as err:
+        print(err)
         return False
 
     return metric_set

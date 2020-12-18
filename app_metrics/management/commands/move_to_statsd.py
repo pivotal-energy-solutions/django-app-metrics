@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
 from django.core.management.base import BaseCommand
+
+from app_metrics.backends.statsd import metric
 from app_metrics.models import MetricItem
-from app_metrics.backends.statsd_backend import metric
+
+from app_metrics.utils import get_backend
 
 
 class Command(BaseCommand):

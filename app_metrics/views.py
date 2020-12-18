@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
-from django.views.generic.dates import  MonthArchiveView, YearArchiveView
+from django.views.generic.dates import MonthArchiveView, YearArchiveView
 from django.views.generic.base import TemplateView
 from collections import defaultdict
 from operator import attrgetter
 from app_metrics.models import MetricDay, MetricMonth
 from dateutil.rrule import MONTHLY, DAILY, rrule
-import datetime, calendar
+import datetime
+import calendar
 
 
 class BaseReport(object):
 
-    @method_decorator(staff_member_required)  # all instance methods that inherit from this class will be admin required
+    @method_decorator(
+        staff_member_required)  # all instance methods that inherit from this class will be admin required
     def dispatch(self, *args, **kwargs):
         return super(BaseReport, self).dispatch(*args, **kwargs)
 
@@ -24,7 +26,8 @@ class MetricReports(BaseReport, TemplateView):
         """
         Grab all the unique dates for metric data that we have
         """
-        return { 'title': 'Metric Reports', 'dates': MetricMonth.objects.all().dates('created', 'month', 'ASC') }
+        return {'title': 'Metric Reports',
+                'dates': MetricMonth.objects.all().dates('created', 'month', 'ASC')}
 
 
 class BaseMetricReport(BaseReport):
@@ -43,7 +46,7 @@ class BaseMetricReport(BaseReport):
         """
         Should be overriden by children to create an appropriate date list
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def get_context_data(self, *args, **kwargs):
         """
@@ -60,19 +63,26 @@ class BaseMetricReport(BaseReport):
         # fill the holes for days we have no entries
         for metric in metrics.keys():
             for _date in context['date_list']:  # going through all the dates
-                if metrics[metric].get(getattr(_date, self.date_grouping_attr), None) is None:  # fill in empty ones
+                if metrics[metric].get(getattr(_date, self.date_grouping_attr),
+                                       None) is None:  # fill in empty ones
                     # setting the correct created day so it sorts accordingly
                     date_args = {'year': _date.year, 'month': _date.month, 'day': _date.day}
                     date_args[self.date_grouping_attr] = getattr(_date, self.date_grouping_attr)
-                    date_args = (date_args.get('year'), date_args.get('month'), date_args.get('day'))
-                    metrics[metric][getattr(_date, self.date_grouping_attr)] = self.klass(num=0, metric=metric, created=datetime.date(*date_args)) # sticking an unsaved item with 0 as a placeholder
+                    date_args = (
+                        date_args.get('year'), date_args.get('month'), date_args.get('day')
+                    )
+                    metrics[metric][getattr(_date, self.date_grouping_attr)] = self.klass(
+                        num=0, metric=metric, created=datetime.date(*date_args))
+                    # sticking an unsaved item with 0 as a placeholder
         # format our date list
-        context['date_list'] = [ d.strftime(getattr(self, 'format_string')) for d in context['date_list'] ]
+        context['date_list'] = [d.strftime(getattr(self, 'format_string')) for d in
+                                context['date_list']]
         # sort metric entries are by date as well
         for m in metrics.keys():
             metrics[m] = metrics[m].values()  # flatten this dict out
             metrics[m].sort(key=attrgetter('created'))
-        context[BaseMetricReport.context_object_name] = metrics.items() # calling items here to make the template cleaner/template didnt like calling items in there
+        # calling items here to make the template cleaner/template didnt like calling items in there
+        context[BaseMetricReport.context_object_name] = metrics.items()
         return context
 
 
@@ -90,7 +100,9 @@ class MonthlyMetricReport(BaseMetricReport, MonthArchiveView):
         """
         found_day = date_list[0]
         _, last_day_of_month = calendar.monthrange(found_day.year, found_day.month)
-        return list(BaseMetricReport.create_date_range(DAILY, datetime.date(found_day.year, found_day.month, 1), datetime.date(found_day.year, found_day.month, last_day_of_month)))
+        return list(BaseMetricReport.create_date_range(
+            DAILY, datetime.date(found_day.year, found_day.month, 1),
+            datetime.date(found_day.year, found_day.month, last_day_of_month)))
 
 
 class YearlyMetricReport(BaseMetricReport, YearArchiveView):
@@ -105,4 +117,6 @@ class YearlyMetricReport(BaseMetricReport, YearArchiveView):
         Creates a list of date objects that represent each month of the year for a given year
         """
         found_day = date_list[0]
-        return list(BaseMetricReport.create_date_range(MONTHLY, datetime.date(found_day.year, 1, 1), datetime.date(found_day.year, 12, 1)))
+        return list(BaseMetricReport.create_date_range(
+            MONTHLY, datetime.date(found_day.year, 1, 1),
+            datetime.date(found_day.year, 12, 1)))

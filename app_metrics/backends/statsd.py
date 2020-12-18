@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+
 from app_metrics.tasks import statsd_metric_task, statsd_timing_task, statsd_gauge_task
 
 

@@ -4,9 +4,13 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
-from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_previous_month, get_previous_year
+from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_previous_month, \
+    get_previous_year
 
-class InvalidMetric(Exception): pass
+
+class InvalidMetric(Exception):
+    pass
+
 
 def trending_for_metric(metric=None, date=None):
     """ Build a dictionary of trending values for a given metric """
@@ -22,12 +26,13 @@ def trending_for_metric(metric=None, date=None):
     if date == datetime.date.today():
         data['current_day'] = _trending_for_current_day(metric)
 
-    data['yesterday']   = _trending_for_yesterday(metric)
-    data['week']        = _trending_for_week(metric)
-    data['month']       = _trending_for_month(metric)
-    data['year']        = _trending_for_year(metric)
+    data['yesterday'] = _trending_for_yesterday(metric)
+    data['week'] = _trending_for_week(metric)
+    data['month'] = _trending_for_month(metric)
+    data['year'] = _trending_for_year(metric)
 
     return data
+
 
 def _trending_for_current_day(metric=None):
     date = datetime.date.today()
@@ -43,6 +48,7 @@ def _trending_for_current_day(metric=None):
 
     return count
 
+
 def _trending_for_yesterday(metric=None):
     today = datetime.date.today()
     yesterday_date = today - datetime.timedelta(days=1)
@@ -50,9 +56,9 @@ def _trending_for_yesterday(metric=None):
     previous_month_date = get_previous_month(today)
 
     data = {
-            'yesterday': 0,
-            'previous_week': 0,
-            'previous_month': 0,
+        'yesterday': 0,
+        'previous_week': 0,
+        'previous_month': 0,
     }
 
     try:
@@ -75,6 +81,7 @@ def _trending_for_yesterday(metric=None):
 
     return data
 
+
 def _trending_for_week(metric=None):
     this_week_date = week_for_date(datetime.date.today())
     previous_week_date = this_week_date - datetime.timedelta(weeks=1)
@@ -82,10 +89,10 @@ def _trending_for_week(metric=None):
     previous_year_week_date = get_previous_year(this_week_date)
 
     data = {
-            'week': 0,
-            'previous_week': 0,
-            'previous_month_week': 0,
-            'previous_year_week': 0,
+        'week': 0,
+        'previous_week': 0,
+        'previous_month_week': 0,
+        'previous_year_week': 0,
     }
 
     try:
@@ -101,7 +108,8 @@ def _trending_for_week(metric=None):
         pass
 
     try:
-        previous_month_week = MetricWeek.objects.get(metric=metric, created=previous_month_week_date)
+        previous_month_week = MetricWeek.objects.get(metric=metric,
+                                                     created=previous_month_week_date)
         data['previous_month_week'] = previous_month_week.num
     except ObjectDoesNotExist:
         pass
@@ -114,15 +122,16 @@ def _trending_for_week(metric=None):
 
     return data
 
+
 def _trending_for_month(metric=None):
     this_month_date = month_for_date(datetime.date.today())
     previous_month_date = get_previous_month(this_month_date)
     previous_month_year_date = get_previous_year(this_month_date)
 
     data = {
-            'month': 0,
-            'previous_month': 0,
-            'previous_month_year': 0
+        'month': 0,
+        'previous_month': 0,
+        'previous_month_year': 0
     }
 
     try:
@@ -138,20 +147,22 @@ def _trending_for_month(metric=None):
         pass
 
     try:
-        previous_month_year = MetricMonth.objects.get(metric=metric, created=previous_month_year_date)
+        previous_month_year = MetricMonth.objects.get(metric=metric,
+                                                      created=previous_month_year_date)
         data['previous_month_year'] = previous_month_year.num
     except ObjectDoesNotExist:
         pass
 
     return data
 
+
 def _trending_for_year(metric=None):
     this_year_date = year_for_date(datetime.date.today())
     previous_year_date = get_previous_year(this_year_date)
 
     data = {
-            'year': 0,
-            'previous_year': 0,
+        'year': 0,
+        'previous_year': 0,
     }
 
     try:

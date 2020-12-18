@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import datetime
 import logging
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
 
-from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
+from app_metrics.models import MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
 
 from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_backend
 
@@ -16,7 +15,7 @@ class Command(BaseCommand):
 
     requires_model_validation = True
 
-    def handle(self, **options):
+    def handle(self, **options):  # noqa: C901
         """ Aggregate Application Metrics """
 
         backend = get_backend()
@@ -99,7 +98,8 @@ class Command(BaseCommand):
                 try:
                     year = years[0]
                 except IndexError:
-                    year, create = MetricYear.objects.get_or_create(metric=i.metric, created=year_date)
+                    year, create = MetricYear.objects.get_or_create(metric=i.metric,
+                                                                    created=year_date)
 
             year.num = year.num + i.num
             year.save()
