@@ -1,19 +1,16 @@
+# -*- coding: utf-8 -*-
 import base64
 import json
-import urllib
 import datetime
 import logging
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
 import dateutil.parser
 from django.utils.timezone import now as utcnow
 import pytz
-import six
 
-log = logging.getLogger('celery.task')
-
-try:
-    from celery.task import task
-except ImportError:
-    from celery.decorators import task
+from celery import shared_task
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -32,7 +29,7 @@ except ImportError:
 # For redis support
 try:
     import redis
-except:
+except ImportError:
     redis = None
 
 # For librato support
@@ -43,22 +40,25 @@ try:
 except ImportError:
     librato = None
 
+log = logging.getLogger('celery.task')
+
+
 class MixPanelTrackError(Exception):
     pass
 
 
-@task
+@shared_task
 def db_metric_task(num=1, **kwargs):
     """This is a task to add a metric item"""
     if getattr(settings, 'DEBUG'):
         log.setLevel(logging.DEBUG)
     created = kwargs.pop('created', utcnow())
-    if isinstance(created, six.string_types):
+    if isinstance(created, str):
         try:
             created = dateutil.parser.parse(created).replace(tzinfo=pytz.utc)
-        except:
-            log.error("Unable to parse date from {}".format(created))
-            created=utcnow()
+        except Exception as err:
+            log.error('Unable to parse date from {} - {}'.format(created, err))
+            created = utcnow()
     try:
         met, _ = Metric.objects.get_or_create(**kwargs)
         MetricItem.objects.create(metric=met, num=num, created=created)
@@ -66,11 +66,12 @@ def db_metric_task(num=1, **kwargs):
         met, _ = Metric.objects.get(**kwargs)
         MetricItem.objects.create(metric=met, num=num, created=created)
     except Exception as err:
-        issue = "Unable to complete task!! {} - kwargs: {}".format(err, kwargs)
+        issue = 'Unable to complete task!! {} - kwargs: {}'.format(err, kwargs)
         log.exception(issue)
         raise
 
-@task
+
+@shared_task
 def db_gauge_task(current_value, **kwargs):
     """This is a task to adjust (or create) a guage"""
     if getattr(settings, 'DEBUG'):
@@ -83,42 +84,42 @@ def db_gauge_task(current_value, **kwargs):
     if not created:
         gauge.current_value = current_value
         gauge.save()
-    log.debug("{} Gauge {} to {}".format("Created" if created else "Updated", gauge, current_value))
+    log.debug('{} Gauge {} to {}'.format('Created' if created else 'Updated', gauge, current_value))
 
 
 def _get_token():
     token = getattr(settings, 'APP_METRICS_MIXPANEL_TOKEN', None)
 
     if not token:
-        raise ImproperlyConfigured("You must define APP_METRICS_MIXPANEL_TOKEN when using the mixpanel backend.")
+        raise ImproperlyConfigured(
+            'You must define APP_METRICS_MIXPANEL_TOKEN when using the mixpanel backend.')
     else:
         return token
 
+
 # Mixpanel tasks
 
-@task
+
+@shared_task
 def mixpanel_metric_task(slug, num, properties=None, **kwargs):
-
-    import urllib2
-
     token = _get_token()
     if properties is None:
         properties = dict()
 
-    if "token" not in properties:
-        properties["token"] = token
+    if 'token' not in properties:
+        properties['token'] = token
 
-    url = getattr(settings, 'APP_METRICS_MIXPANEL_API_URL', "http://api.mixpanel.com/track/")
+    url = getattr(settings, 'APP_METRICS_MIXPANEL_API_URL', 'http://api.mixpanel.com/track/')
 
-    params = {"event": slug, "properties": properties}
+    params = {'event': slug, 'properties': properties}
     b64_data = base64.b64encode(json.dumps(params))
 
-    data = urllib.urlencode({"data": b64_data})
-    req = urllib2.Request(url, data)
+    data = urlencode({'data': b64_data})
+    req = Request(url, data)
     for i in range(num):
-        response = urllib2.urlopen(req)
+        response = urlopen(req)
         if response.read() == '0':
-            raise MixPanelTrackError(u'MixPanel returned 0')
+            raise MixPanelTrackError('MixPanel returned 0')
 
 
 # Statsd tasks
@@ -135,13 +136,14 @@ def get_statsd_conn():
     return conn
 
 
-@task
+@shared_task
 def statsd_metric_task(slug, num=1, **kwargs):
     conn = get_statsd_conn()
     counter = statsd.Counter(slug, connection=conn)
     counter += num
 
-@task
+
+@shared_task
 def statsd_timing_task(slug, seconds_taken=1.0, **kwargs):
     conn = get_statsd_conn()
 
@@ -154,12 +156,13 @@ def statsd_timing_task(slug, seconds_taken=1.0, **kwargs):
     timer.send('total', seconds_taken)
 
 
-@task
+@shared_task
 def statsd_gauge_task(slug, current_value, **kwargs):
     conn = get_statsd_conn()
     gauge = statsd.Gauge(slug, connection=conn)
     # We send nothing here, since we only have one name/slug to work with here.
     gauge.send('', current_value)
+
 
 # Redis tasks
 
@@ -173,7 +176,8 @@ def get_redis_conn():
     )
     return conn
 
-@task
+
+@shared_task
 def redis_metric_task(slug, num=1, **kwargs):
     # Record a metric in redis. We prefix our key here with 'm' for Metric
     # and build keys for each day, week, month, and year
@@ -181,10 +185,10 @@ def redis_metric_task(slug, num=1, **kwargs):
 
     # Build keys
     now = datetime.datetime.now()
-    day_key = "m:%s:%s" % (slug, now.strftime("%Y-%m-%d"))
-    week_key = "m:%s:w:%s" % (slug, now.strftime("%U"))
-    month_key = "m:%s:m:%s" % (slug, now.strftime("%Y-%m"))
-    year_key = "m:%s:y:%s" % (slug, now.strftime("%Y"))
+    day_key = 'm:%s:%s' % (slug, now.strftime('%Y-%m-%d'))
+    week_key = 'm:%s:w:%s' % (slug, now.strftime('%U'))
+    month_key = 'm:%s:m:%s' % (slug, now.strftime('%Y-%m'))
+    year_key = 'm:%s:y:%s' % (slug, now.strftime('%Y'))
 
     # Increment keys
     r.incrby(day_key, num)
@@ -192,22 +196,25 @@ def redis_metric_task(slug, num=1, **kwargs):
     r.incrby(month_key, num)
     r.incrby(year_key, num)
 
-@task
+
+@shared_task
 def redis_gauge_task(slug, current_value, **kwargs):
     # We prefix our keys with a 'g' here for Gauge to avoid issues
     # of having a gauge and metric of the same name
     r = get_redis_conn()
-    r.set("g:%s" % slug, current_value)
+    r.set('g:%s' % slug, current_value)
+
 
 # Librato tasks
 
-@task
-def librato_metric_task(name, num, attributes=None, metric_type="gauge",
+
+@shared_task
+def librato_metric_task(name, num, attributes=None, metric_type='gauge',
                         **kwargs):
     connection = librato.connect(settings.APP_METRICS_LIBRATO_USER,
                                  settings.APP_METRICS_LIBRATO_TOKEN)
 
-    if metric_type == "counter":
+    if metric_type == 'counter':
         metric = LibratoCounter(connection, name, attributes=attributes)
     else:
         metric = LibratoGauge(connection, name, attributes=attributes)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """A setuptools based setup module.
 
 See:
@@ -96,27 +97,19 @@ setup(
     #
     # For a list of valid classifiers, see
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=[  # Optional
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
-
-        # Indicate who your project is intended for
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
+        'Framework :: Django',
+        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.1',
         'Intended Audience :: Developers',
-
-        # Pick your license as you wish
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-
-        'Framework :: Django',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Topic :: Utilities'
     ],
 
     # This field adds keywords for your project which will appear on the
@@ -134,7 +127,7 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    packages=find_packages(exclude=['contrib', 'docs', 'tests', 'demo_app']),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -142,7 +135,10 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['celery', 'django>=1.11,<3'],  # Optional
+    install_requires=[
+          'Django>=2.2',
+          'celery'
+      ],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"

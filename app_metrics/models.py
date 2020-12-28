@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 
 from django.conf import settings
@@ -9,20 +10,21 @@ from django.utils.timezone import now as utcnow
 
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+
 class Metric(models.Model):
     """ The type of metric we want to store """
     name = models.CharField(_('name'), max_length=128)
     company = models.ForeignKey('company.Company', blank=True, null=True, on_delete=models.SET_NULL)
-    slug = models.SlugField(_('slug'), max_length=128, db_index=True)
+    slug = models.SlugField(_('slug'), max_length=128, db_index=True, unique=True)
 
     class Meta:
         unique_together = ('slug', 'company')
         verbose_name = _('metric')
         verbose_name_plural = _('metrics')
 
-    def __unicode__(self):
-        company = u'' if not self.company else u' ({})'.format(self.company)
-        return u'{}{}'.format(self.name, company)
+    def __str__(self):
+        company = '' if not self.company else ' ({})'.format(self.company)
+        return '{}{}'.format(self.name, company)
 
     def save(self, *args, **kwargs):
         if not self.id and not self.slug:
@@ -30,12 +32,14 @@ class Metric(models.Model):
             i = 0
             while True:
                 try:
-                    return super(Metric, self).save(*args, **kwargs)
-                except IntegrityError:
-                    i += 1
-                    self.slug = "%s-%d" % (self.slug, i)
-        else:
-            return super(Metric, self).save(*args, **kwargs)
+                    metric = Metric.objects.get(slug=self.slug)
+                    if metric:
+                        i += 1
+                        self.slug = '%s-%d' % (self.slug, i)
+                except Metric.DoesNotExist:
+                    break
+        return super(Metric, self).save(*args, **kwargs)
+
 
 class MetricSet(models.Model):
     """ A set of metrics that should be sent via email to certain users """
@@ -51,8 +55,9 @@ class MetricSet(models.Model):
         verbose_name = _('metric set')
         verbose_name_plural = _('metric sets')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
+
 
 class MetricItem(models.Model):
     """ Individual metric items """
@@ -64,12 +69,13 @@ class MetricItem(models.Model):
         verbose_name = _('metric item')
         verbose_name_plural = _('metric items')
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(name)s' of %(num)d on %(created)s") % {
             'name': self.metric,
             'num': self.num,
             'created': self.created
         }
+
 
 class MetricDay(models.Model):
     """ Aggregation of Metrics on a per day basis """
@@ -84,11 +90,12 @@ class MetricDay(models.Model):
         verbose_name_plural = _('day metrics')
         ordering = (_('created'), _('metric'))
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(name)s' for '%(created)s'") % {
             'name': self.metric,
             'created': self.created
         }
+
 
 class MetricWeek(models.Model):
     """ Aggregation of Metrics on a weekly basis """
@@ -103,12 +110,13 @@ class MetricWeek(models.Model):
         verbose_name_plural = _('week metrics')
         ordering = (_('created'), _('metric'))
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(name)s' for week %(week)s of %(year)s") % {
             'name': self.metric,
-            'week': self.created.strftime("%U"),
-            'year': self.created.strftime("%Y")
+            'week': self.created.strftime('%U'),
+            'year': self.created.strftime('%Y')
         }
+
 
 class MetricMonth(models.Model):
     """ Aggregation of Metrics on monthly basis """
@@ -123,11 +131,11 @@ class MetricMonth(models.Model):
         verbose_name_plural = _('month metrics')
         ordering = (_('created'), _('metric'))
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(name)s' for %(month)s %(year)s") % {
             'name': self.metric,
-            'month': self.created.strftime("%B"),
-            'year': self.created.strftime("%Y")
+            'month': self.created.strftime('%B'),
+            'year': self.created.strftime('%Y')
         }
 
 
@@ -144,10 +152,10 @@ class MetricYear(models.Model):
         verbose_name_plural = _('year metrics')
         ordering = (_('created'), _('metric'))
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(name)s' for %(year)s") % {
             'name': self.metric,
-            'year': self.created.strftime("%Y")
+            'year': self.created.strftime('%Y')
         }
 
 
@@ -158,7 +166,8 @@ class Gauge(models.Model):
     name = models.CharField(_('name'), max_length=128)
     company = models.ForeignKey('company.Company', blank=True, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(_('slug'), max_length=128)
-    current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6, default='0.00')
+    current_value = models.DecimalField(_('current value'), max_digits=15, decimal_places=6,
+                                        default='0.00')
     created = models.DateTimeField(_('created'), default=utcnow)
     updated = models.DateTimeField(_('updated'), default=utcnow)
 
@@ -166,7 +175,7 @@ class Gauge(models.Model):
         verbose_name = _('gauge')
         verbose_name_plural = _('gauges')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -179,5 +188,5 @@ class Gauge(models.Model):
                     return super(Gauge, self).save(*args, **kwargs)
                 except IntegrityError:
                     i += 1
-                    self.slug = "%s-%d" % (self.slug, i)
+                    self.slug = '%s-%d' % (self.slug, i)
         return super(Gauge, self).save(*args, **kwargs)

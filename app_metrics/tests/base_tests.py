@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 import datetime
 from decimal import Decimal
 import mock
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.core import management
 from django.conf import settings
 from django.core import mail
@@ -11,10 +12,13 @@ from django.core.exceptions import ImproperlyConfigured
 
 from app_metrics.exceptions import TimerError
 from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear, Gauge
-from app_metrics.utils import *
 from app_metrics.trending import _trending_for_current_day, _trending_for_yesterday, _trending_for_week, _trending_for_month, _trending_for_year
+from app_metrics.utils import create_metric, collection_disabled, metric, get_previous_month, \
+    week_for_date, get_previous_year, month_for_date, year_for_date, create_metric_set, gauge, \
+    get_or_create_metric, Timer
 
-class MetricCreationTests(TestCase):
+
+class MetricCreationTests(TransactionTestCase):
 
     def test_auto_slug_creation(self):
         new_metric = Metric.objects.create(name='foo bar')
@@ -23,15 +27,15 @@ class MetricCreationTests(TestCase):
 
         new_metric2 = Metric.objects.create(name='foo bar')
         self.assertEqual(new_metric2.name, 'foo bar')
-        self.assertEqual(new_metric2.slug, 'foo-bar_1')
+        self.assertEqual(new_metric2.slug, 'foo-bar-1')
 
     def test_metric(self):
         new_metric = create_metric(name='Test Metric Class',
                                    slug='test_metric')
 
-        metric('test_metric')
-        metric('test_metric')
-        metric('test_metric')
+        metric(slug='test_metric')
+        metric(slug='test_metric')
+        metric(slug='test_metric')
 
         current_count = MetricItem.objects.filter(metric=new_metric)
 
@@ -43,10 +47,9 @@ class MetricCreationTests(TestCase):
     def test_get_or_create_metric(self):
         new_metric = get_or_create_metric(name='Test Metric Class',
                                           slug='test_metric')
-
-        metric('test_metric')
-        metric('test_metric')
-        metric('test_metric')
+        metric(slug='test_metric')
+        metric(slug='test_metric')
+        metric(slug='test_metric')
 
         new_metric = get_or_create_metric(name='Test Metric Class',
                                           slug='test_metric')
@@ -63,12 +66,12 @@ class MetricAggregationTests(TestCase):
         self.metric1 = create_metric(name='Test Aggregation1', slug='test_agg1')
         self.metric2 = create_metric(name='Test Aggregation2', slug='test_agg2')
 
-        metric('test_agg1')
-        metric('test_agg1')
+        metric(slug='test_agg1')
+        metric(slug='test_agg1')
 
-        metric('test_agg2')
-        metric('test_agg2')
-        metric('test_agg2')
+        metric(slug='test_agg2')
+        metric(slug='test_agg2')
+        metric(slug='test_agg2')
 
     def test_daily_aggregation(self):
         management.call_command('metrics_aggregate')
@@ -114,7 +117,7 @@ class DisabledTests(TestCase):
     def test_disabled(self):
         self.assertEqual(MetricItem.objects.filter(metric__slug='test_disable').count(), 0)
         settings.APP_METRICS_DISABLED = True
-        metric('test_disable')
+        metric(slug='test_disable')
         self.assertEqual(MetricItem.objects.filter(metric__slug='test_disable').count(), 0)
         self.assertTrue(collection_disabled())
 
@@ -131,11 +134,11 @@ class TrendingTests(TestCase):
 
     def test_trending_for_current_day(self):
         """ Test current day trending counter """
-        metric('test_trend1')
-        metric('test_trend1')
+        metric(slug='test_trend1')
+        metric(slug='test_trend1')
         management.call_command('metrics_aggregate')
-        metric('test_trend1')
-        metric('test_trend1')
+        metric(slug='test_trend1')
+        metric(slug='test_trend1')
 
         count = _trending_for_current_day(self.metric1)
         self.assertEqual(count, 4)
@@ -224,17 +227,17 @@ class EmailTests(TestCase):
         self.user2 = User.objects.create_user('user2', 'user2@example.com', 'user2pass')
         self.metric1 = create_metric(name='Test Trending1', slug='test_trend1')
         self.metric2 = create_metric(name='Test Trending2', slug='test_trend2')
-        self.set = create_metric_set(name="Fake Report",
+        self.set = create_metric_set(name='Fake Report',
                                      metrics=[self.metric1, self.metric2],
                                      email_recipients=[self.user1, self.user2])
 
     def test_email(self):
         """ Test email sending """
-        metric('test_trend1')
-        metric('test_trend1')
-        metric('test_trend1')
-        metric('test_trend2')
-        metric('test_trend2')
+        metric(slug='test_trend1')
+        metric(slug='test_trend1')
+        metric(slug='test_trend1')
+        metric(slug='test_trend2')
+        metric(slug='test_trend2')
 
         management.call_command('metrics_aggregate')
         management.call_command('metrics_send_mail')
@@ -251,18 +254,18 @@ class GaugeTests(TestCase):
     def test_existing_gauge(self):
         self.assertEqual(Gauge.objects.all().count(), 1)
         self.assertEqual(Gauge.objects.get(slug='testing').current_value, Decimal('0.00'))
-        gauge('testing', '10.5')
+        gauge('10.5', slug='testing')
 
         # We should not have created a new gauge
         self.assertEqual(Gauge.objects.all().count(), 1)
         self.assertEqual(Gauge.objects.get(slug='testing').current_value, Decimal('10.5'))
 
         # Test updating
-        gauge('testing', '11.1')
+        gauge('11.1', slug='testing', )
         self.assertEqual(Gauge.objects.get(slug='testing').current_value, Decimal('11.1'))
 
     def test_new_gauge(self):
-        gauge('test_trend1', Decimal('12.373'))
+        gauge(Decimal('12.373'), slug='test_trend1')
         self.assertEqual(Gauge.objects.all().count(), 2)
         self.assertTrue('test_trend1' in list(Gauge.objects.all().values_list('slug', flat=True)))
         self.assertEqual(Gauge.objects.get(slug='test_trend1').current_value, Decimal('12.373'))

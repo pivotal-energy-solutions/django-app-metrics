@@ -2,22 +2,21 @@
 {{ metric_set.name }} Report for {{ today|date:"D d M Y" }}
 -----------------------------------------------------------
 
-TODAY:{% for m in metrics %} 
-{{ m.metric.name|ljust:40 }} {{ m.trends.current_day|rjust:10 }} {% endfor %} 
+TODAY:{% for m in metrics %}
+{{ m.metric.name|ljust:40 }} {{ m.trends.current_day|rjust:10 }} {% endfor %}
 
 YESTERDAY                                 Yesterday  Prev Week Prev Month
----------                                ---------- ---------- ----------{% for m in metrics %} 
-{{ m.metric.name|ljust:40 }} {{ m.trends.yesterday.yesterday|rjust:10 }} {{ m.trends.yesterday.previous_week|rjust:10 }} {{ m.trends.yesterday.previous_month|rjust:10 }}{% endfor %} 
+---------                                ---------- ---------- ----------{% for m in metrics %}
+{{ m.metric.name|ljust:40 }} {{ m.trends.yesterday.yesterday|rjust:10 }} {{ m.trends.yesterday.previous_week|rjust:10 }} {{ m.trends.yesterday.previous_month|rjust:10 }}{% endfor %}
 
 WEEK TO DATE                              This Week  Prev Week Prev Month  Prev Year
------------                              ---------- ---------- ---------- ----------{% for m in metrics %} 
-{{ m.metric.name|ljust:40 }} {{ m.trends.week.week|rjust:10 }} {{ m.trends.week.previous_week|rjust:10 }} {{ m.trends.week.previous_month_week|rjust:10 }} {{ m.trends.week.previous_year_week|rjust:10 }}{% endfor %} 
+-----------                              ---------- ---------- ---------- ----------{% for m in metrics %}
+{{ m.metric.name|ljust:40 }} {{ m.trends.week.week|rjust:10 }} {{ m.trends.week.previous_week|rjust:10 }} {{ m.trends.week.previous_month_week|rjust:10 }} {{ m.trends.week.previous_year_week|rjust:10 }}{% endfor %}
 
 THIS MONTH                               This Month Prev Month  Prev Year
-----------                               ---------- ---------- ----------{% for m in metrics %} 
-{{ m.metric.name|ljust:40 }} {{ m.trends.month.month|rjust:10 }} {{ m.trends.month.previous_month|rjust:10 }} {{ m.trends.month.previous_year_month|rjust:10 }}{% endfor %} 
+----------                               ---------- ---------- ----------{% for m in metrics %}
+{{ m.metric.name|ljust:40 }} {{ m.trends.month.month|rjust:10 }} {{ m.trends.month.previous_month|rjust:10 }} {{ m.trends.month.previous_year_month|rjust:10 }}{% endfor %}
 
 THIS YEAR                                 This Year  Last Year
----------                                ---------- ----------{% for m in metrics %} 
-{{ m.metric.name|ljust:40 }} {{ m.trends.year.year|rjust:10 }} {{ m.trends.year.previous_year|rjust:10 }}{% endfor %} 
-
+---------                                ---------- ----------{% for m in metrics %}
+{{ m.metric.name|ljust:40 }} {{ m.trends.year.year|rjust:10 }} {{ m.trends.year.previous_year|rjust:10 }}{% endfor %}

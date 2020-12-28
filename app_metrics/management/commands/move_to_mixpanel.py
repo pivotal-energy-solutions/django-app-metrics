@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
 
 from app_metrics.models import MetricItem
@@ -6,7 +7,7 @@ from app_metrics.utils import get_backend
 
 
 class Command(BaseCommand):
-    help = "Move MetricItems from the db backend to MixPanel"
+    help = 'Move MetricItems from the db backend to MixPanel'
 
     requires_model_validation = True
 
@@ -17,7 +18,7 @@ class Command(BaseCommand):
 
         # If not using Mixpanel this command is a NOOP
         if backend != 'app_metrics.backends.mixpanel':
-            print("You need to set the backend to MixPanel")
+            print('You need to set the backend to MixPanel')
             return
 
         items = MetricItem.objects.all()

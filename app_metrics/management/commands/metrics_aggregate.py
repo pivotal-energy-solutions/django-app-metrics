@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import datetime
 import logging
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
 
-from app_metrics.models import Metric, MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
+from app_metrics.models import MetricItem, MetricDay, MetricWeek, MetricMonth, MetricYear
 
 from app_metrics.utils import week_for_date, month_for_date, year_for_date, get_backend
 
@@ -12,18 +11,18 @@ log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = "Aggregate Application Metrics"
+    help = 'Aggregate Application Metrics'
 
     requires_model_validation = True
 
-    def handle(self, **options):
+    def handle(self, **options):  # noqa: C901
         """ Aggregate Application Metrics """
 
         backend = get_backend()
 
         # If using Mixpanel this command is a NOOP
         if backend == 'app_metrics.backends.mixpanel':
-            print("Useless use of metrics_aggregate when using Mixpanel backend")
+            print('Useless use of metrics_aggregate when using Mixpanel backend')
             return
 
         # Aggregate Items
@@ -78,11 +77,13 @@ class Command(BaseCommand):
                 if months.count() > 1:
                     months = months.exclude(id=months[0].id)
                     months.delete()
-                try:
-                    month = months[0]
-                except IndexError:
-                    month, create = MetricMonth.objects.get_or_create(metric=i.metric,
-                                                                      created=month_date)
+            try:
+                month = months[0]
+            except IndexError:
+                month, create = MetricMonth.objects.get_or_create(metric=i.metric,
+                                                                  created=month_date)
+            month.num = month.num + i.num
+            month.save()
 
             # Yearly Aggregation
             year_date = year_for_date(i.created)
