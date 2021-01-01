@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 
 __name__ = 'app_metrics'
 __author__ = 'Pivotal Energy Solutions'

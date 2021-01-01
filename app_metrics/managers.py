@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """managers.py: Django app_metrics"""
 
-from __future__ import unicode_literals
 
 import logging
 
@@ -11,7 +10,7 @@ from django.db.models import Q
 
 __author__ = 'Steven Klass'
 __date__ = '4/3/13 5:26 AM'
-__copyright__ = 'Copyright 2012 Pivotal Energy Solutions. All rights reserved.'
+__copyright__ = 'Copyright 2011-2020 Pivotal Energy Solutions. All rights reserved.'
 __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
