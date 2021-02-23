@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
+
+from django.urls import re_path
 from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricReports
 
 # Add these URLs to your main urlconf. Be sure to keep the namespace and app_name as `app_metrics`,
@@ -9,9 +10,9 @@ from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricRep
 
 app_name = 'app_metrics'
 urlpatterns = [
-    url(r'^report/yearly/(?P<year>\d{4})/$', YearlyMetricReport.as_view(),
-        name='yearly_metric_report'),
-    url(r'^report/monthly/(?P<month>\w{3})/(?P<year>\d{4})/$', MonthlyMetricReport.as_view(),
-        name='monthly_metric_report'),
-    url(r'^reports/$', MetricReports.as_view(), name='metric_reports'),
+    re_path(r'^report/yearly/(?P<year>\d{4})/$', YearlyMetricReport.as_view(),
+            name='yearly_metric_report'),
+    re_path(r'^report/monthly/(?P<month>\w{3})/(?P<year>\d{4})/$', MonthlyMetricReport.as_view(),
+            name='monthly_metric_report'),
+    re_path(r'^reports/$', MetricReports.as_view(), name='metric_reports'),
 ]
