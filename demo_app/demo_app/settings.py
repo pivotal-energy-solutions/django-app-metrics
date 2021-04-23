@@ -124,3 +124,5 @@ CELERY_ALWAYS_EAGER = True
 APP_METRICS_BACKEND = 'app_metrics.backends.db'
 APP_METRICS_MIXPANEL_TOKEN = None
 APP_METRICS_DISABLED = False
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
