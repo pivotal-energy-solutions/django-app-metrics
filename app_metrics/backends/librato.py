@@ -7,7 +7,7 @@ def _get_func(_async):
 
 
 def metric(slug, num=1, _async=True, **kwargs):
-    _get_func(_async)(slug, num, metric_type='counter', **kwargs)
+    _get_func(_async)(slug, num, metric_type="counter", **kwargs)
 
 
 def timing(slug, seconds_taken, _async=True, **kwargs):
@@ -15,4 +15,4 @@ def timing(slug, seconds_taken, _async=True, **kwargs):
 
 
 def gauge(slug, current_value, _async=True, **kwargs):
-    _get_func(_async)(slug, current_value, metric_type='gauge', **kwargs)
+    _get_func(_async)(slug, current_value, metric_type="gauge", **kwargs)

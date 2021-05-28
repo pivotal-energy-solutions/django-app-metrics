@@ -11,25 +11,30 @@ from app_metrics.models import Metric, MetricSet
 
 
 def collection_disabled():
-    return getattr(settings, 'APP_METRICS_DISABLED', False)
+    return getattr(settings, "APP_METRICS_DISABLED", False)
 
 
 def get_backend():
-    return getattr(settings, 'APP_METRICS_BACKEND', 'app_metrics.backends.db')
+    return getattr(settings, "APP_METRICS_BACKEND", "app_metrics.backends.db")
 
 
 def should_create_models(backend=None):
     if backend is None:
         backend = get_backend()
 
-    return backend == 'app_metrics.backends.db'
+    return backend == "app_metrics.backends.db"
 
 
 def create_metric_set(
-        name=None, metrics=None, email_recipients=None,
-        no_email=False, send_daily=True, send_weekly=False,
-        send_monthly=False):
-    """ Create a metric set """
+    name=None,
+    metrics=None,
+    email_recipients=None,
+    no_email=False,
+    send_daily=True,
+    send_weekly=False,
+    send_monthly=False,
+):
+    """Create a metric set"""
 
     # This should be a NOOP for the non-database-backed backends
     if not should_create_models():
@@ -41,7 +46,8 @@ def create_metric_set(
             no_email=no_email,
             send_daily=send_daily,
             send_weekly=send_weekly,
-            send_monthly=send_monthly)
+            send_monthly=send_monthly,
+        )
         metric_set.save()
 
         for m in metrics:
@@ -58,14 +64,14 @@ def create_metric_set(
 
 
 def create_metric(**kwargs):
-    """ Create a new type of metric to track """
+    """Create a new type of metric to track"""
 
     # This should be a NOOP for the non-database-backed backends
     if not should_create_models():
         return
 
     # See if this metric already exists
-    assert len(kwargs.keys()), 'Missing keys'
+    assert len(kwargs.keys()), "Missing keys"
 
     existing = Metric.objects.filter(**kwargs)
     if existing:
@@ -102,15 +108,15 @@ def import_backend():
 
 
 def metric(num=1, **kwargs):
-    """ Increment a metric """
+    """Increment a metric"""
     if collection_disabled():
         return
     backend = import_backend()
     try:
         backend.metric(num, **kwargs)
     except ObjectDoesNotExist:
-        if 'name' not in kwargs.keys() and 'name' not in kwargs.get('defaults', {}).keys():
-            kwargs['name'] = 'AutoCreated Metric'
+        if "name" not in kwargs.keys() and "name" not in kwargs.get("defaults", {}).keys():
+            kwargs["name"] = "AutoCreated Metric"
         metric = create_metric(**kwargs)
         backend.metric(num, metric.as_dict())
 

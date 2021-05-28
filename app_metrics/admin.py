@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from app_metrics.models import (Metric, MetricSet, MetricItem, MetricDay,
-                                MetricWeek, MetricMonth, MetricYear
-                                )
+from app_metrics.models import (
+    Metric,
+    MetricSet,
+    MetricItem,
+    MetricDay,
+    MetricWeek,
+    MetricMonth,
+    MetricYear,
+)
 
 
 class MetricAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'slug', 'num')
-    list_filter = ['metric__name']
+    list_display = ("__str__", "slug", "num")
+    list_filter = ["metric__name"]
 
     def slug(self, obj):
         return obj.metric.slug

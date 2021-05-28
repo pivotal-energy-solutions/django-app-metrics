@@ -11,18 +11,18 @@ log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = 'Aggregate Application Metrics'
+    help = "Aggregate Application Metrics"
 
     requires_model_validation = True
 
     def handle(self, **options):  # noqa: C901
-        """ Aggregate Application Metrics """
+        """Aggregate Application Metrics"""
 
         backend = get_backend()
 
         # If using Mixpanel this command is a NOOP
-        if backend == 'app_metrics.backends.mixpanel':
-            print('Useless use of metrics_aggregate when using Mixpanel backend')
+        if backend == "app_metrics.backends.mixpanel":
+            print("Useless use of metrics_aggregate when using Mixpanel backend")
             return
 
         # Aggregate Items
@@ -41,8 +41,9 @@ class Command(BaseCommand):
                 try:
                     day = days[0]
                 except IndexError:
-                    day, create = MetricDay.objects.get_or_create(metric=i.metric,
-                                                                  created=i.created)
+                    day, create = MetricDay.objects.get_or_create(
+                        metric=i.metric, created=i.created
+                    )
 
             day.num = day.num + i.num
             day.save()
@@ -60,8 +61,9 @@ class Command(BaseCommand):
                 try:
                     week = weeks[0]
                 except IndexError:
-                    week, create = MetricWeek.objects.get_or_create(metric=i.metric,
-                                                                    created=week_date)
+                    week, create = MetricWeek.objects.get_or_create(
+                        metric=i.metric, created=week_date
+                    )
 
             week.num = week.num + i.num
             week.save()
@@ -71,8 +73,9 @@ class Command(BaseCommand):
             try:
                 months = MetricMonth.objects.filter(metric=i.metric, created=month_date)
             except ObjectDoesNotExist:
-                month, create = MetricMonth.objects.get_or_create(metric=i.metric,
-                                                                  created=month_date)
+                month, create = MetricMonth.objects.get_or_create(
+                    metric=i.metric, created=month_date
+                )
             else:
                 if months.count() > 1:
                     months = months.exclude(id=months[0].id)
@@ -80,8 +83,9 @@ class Command(BaseCommand):
             try:
                 month = months[0]
             except IndexError:
-                month, create = MetricMonth.objects.get_or_create(metric=i.metric,
-                                                                  created=month_date)
+                month, create = MetricMonth.objects.get_or_create(
+                    metric=i.metric, created=month_date
+                )
             month.num = month.num + i.num
             month.save()
 
@@ -98,8 +102,9 @@ class Command(BaseCommand):
                 try:
                     year = years[0]
                 except IndexError:
-                    year, create = MetricYear.objects.get_or_create(metric=i.metric,
-                                                                    created=year_date)
+                    year, create = MetricYear.objects.get_or_create(
+                        metric=i.metric, created=year_date
+                    )
 
             year.num = year.num + i.num
             year.save()

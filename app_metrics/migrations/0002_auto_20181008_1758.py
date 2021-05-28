@@ -11,49 +11,73 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('company', '0001_initial'),
+        ("company", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('app_metrics', '0001_initial'),
+        ("app_metrics", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='metricset',
-            name='email_recipients',
-            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name='email recipients'),
+            model_name="metricset",
+            name="email_recipients",
+            field=models.ManyToManyField(
+                to=settings.AUTH_USER_MODEL, verbose_name="email recipients"
+            ),
         ),
         migrations.AddField(
-            model_name='metricset',
-            name='metrics',
-            field=models.ManyToManyField(to='app_metrics.Metric', verbose_name='metrics'),
+            model_name="metricset",
+            name="metrics",
+            field=models.ManyToManyField(to="app_metrics.Metric", verbose_name="metrics"),
         ),
         migrations.AddField(
-            model_name='metricmonth',
-            name='metric',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.Metric', verbose_name=b'metric'),
+            model_name="metricmonth",
+            name="metric",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app_metrics.Metric",
+                verbose_name=b"metric",
+            ),
         ),
         migrations.AddField(
-            model_name='metricitem',
-            name='metric',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.Metric', verbose_name='metric'),
+            model_name="metricitem",
+            name="metric",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app_metrics.Metric",
+                verbose_name="metric",
+            ),
         ),
         migrations.AddField(
-            model_name='metricday',
-            name='metric',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.Metric', verbose_name='metric'),
+            model_name="metricday",
+            name="metric",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app_metrics.Metric",
+                verbose_name="metric",
+            ),
         ),
         migrations.AddField(
-            model_name='metric',
-            name='company',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='company.Company'),
+            model_name="metric",
+            name="company",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="company.Company",
+            ),
         ),
         migrations.AddField(
-            model_name='gauge',
-            name='company',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='company.Company'),
+            model_name="gauge",
+            name="company",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="company.Company",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='metric',
-            unique_together=set([('slug', 'company')]),
+            name="metric",
+            unique_together=set([("slug", "company")]),
         ),
     ]

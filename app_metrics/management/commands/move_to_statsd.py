@@ -9,7 +9,7 @@ from app_metrics.utils import get_backend
 
 
 class Command(BaseCommand):
-    help = 'Move MetricItems from the db backend to statsd'
+    help = "Move MetricItems from the db backend to statsd"
     requires_model_validation = True
 
     def handle(self, **options):
@@ -17,7 +17,7 @@ class Command(BaseCommand):
         backend = get_backend()
 
         # If not using statsd, this command is a NOOP.
-        if backend != 'app_metrics.backends.statsd_backend':
+        if backend != "app_metrics.backends.statsd_backend":
             sys.exit(1, "You need to set the backend to 'statsd_backend'")
 
         items = MetricItem.objects.all()

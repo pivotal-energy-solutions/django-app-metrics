@@ -7,25 +7,25 @@ from app_metrics.utils import get_backend
 
 
 class Command(BaseCommand):
-    help = 'Move MetricItems from the db backend to MixPanel'
+    help = "Move MetricItems from the db backend to MixPanel"
 
     requires_model_validation = True
 
     def handle(self, **options):
-        """ Move MetricItems from the db backend to MixPanel" """
+        """Move MetricItems from the db backend to MixPanel" """
 
         backend = get_backend()
 
         # If not using Mixpanel this command is a NOOP
-        if backend != 'app_metrics.backends.mixpanel':
-            print('You need to set the backend to MixPanel')
+        if backend != "app_metrics.backends.mixpanel":
+            print("You need to set the backend to MixPanel")
             return
 
         items = MetricItem.objects.all()
 
         for i in items:
             properties = {
-                'time': i.created.strftime('%s'),
+                "time": i.created.strftime("%s"),
             }
             metric(i.metric.slug, num=i.num, properties=properties)
 
