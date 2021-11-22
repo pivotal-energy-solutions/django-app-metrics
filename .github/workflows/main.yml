@@ -210,7 +210,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: ['outdated', 'black', 'pre-commit', 'security', 'django_matrix', 'coverage']
+    needs: ['cancel', 'outdated', 'black', 'pre-commit', 'security', 'django_matrix', 'coverage']
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
