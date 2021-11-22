@@ -54,7 +54,6 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Django",
-        "Framework :: Django :: 2.2",
         "Framework :: Django :: 3.0",
         "Framework :: Django :: 3.1",
         "Framework :: Django :: 3.2",
@@ -70,7 +69,7 @@ setup(
     ],
     keywords="django analytics development",  # Optional
     packages=find_packages(exclude=["contrib", "docs", "tests", "demo_app"]),  # Required
-    install_requires=["Django>=2.2", "celery"],
+    install_requires=["Django~=3", "celery"],
     package_data={  # Optional
         "app_metrics": [
             "templates/app_metrics/*",
