@@ -6,6 +6,25 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
+__name__ = "app_metrics"
+__author__ = "Pivotal Energy Solutions"
+__version_info__ = (2, 1, 5)
+__version__ = ".".join(map(str, __version_info__))
+__date__ = "2014/07/22 4:47:00 PM"
+__credits__ = [
+    "Frank Wiles",
+    "Ross Poulton",
+    "Flavio Curella",
+    "Jacob Burch",
+    "Jannis Leidel",
+    "Flávio Juvena",
+    "Daniel Lindsley",
+    "Hannes Struß",
+    "Steven Klass",
+    "Tim Valenta",
+]
+__license__ = "See the file LICENSE.txt for licensing information."
+
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 
@@ -15,8 +34,6 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-from app_metrics import __version__, __name__, __author__
-
 name = "pivotal_" + __name__
 base_url = "https://github.com/pivotal-energy-solutions/django-app-metrics"
 
@@ -25,7 +42,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name=name,  # Required
-    version=__version__,  # Required
+    version="2.1.5",  # Required
     description="django-app-metrics is a reusable Django application for tracking and emailing application metrics.",
     long_description=long_description,  # Optional
     long_description_content_type="text/markdown",
