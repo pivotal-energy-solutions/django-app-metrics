@@ -69,7 +69,7 @@ setup(
     ],
     keywords="django analytics development",  # Optional
     packages=find_packages(exclude=["contrib", "docs", "tests", "demo_app"]),  # Required
-    install_requires=["Django~=3", "celery"],
+    install_requires=["django~=3.2", "celery"],
     package_data={  # Optional
         "app_metrics": [
             "templates/app_metrics/*",
