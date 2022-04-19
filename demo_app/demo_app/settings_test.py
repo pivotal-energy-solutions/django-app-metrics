@@ -20,8 +20,19 @@ MIGRATION_MODULES = DisableMigrations()
 warnings.simplefilter("once")
 
 
+mysql_db = DATABASES["default"]
+DEFAULT_DB = {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+if os.environ.get("DB_TYPE") == "mysql":
+    print("Using MySQL Backend!")
+    DEFAULT_DB = mysql_db
+
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
+    "default": DEFAULT_DB,
 }
+
+CELERY_TASK_ALWAYS_EAGER = CELERY_TASK_EAGER_PROPAGATES = True
+CELERYD_HIJACK_ROOT_LOGGER = True
+
+DJANGO_TEST_PROCESSES = 4
 
 SILENCED_SYSTEM_CHECKS = ["django_mysql.E016"]
