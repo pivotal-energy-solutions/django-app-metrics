@@ -109,18 +109,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # Internationalization
@@ -172,9 +164,9 @@ LOGGING = {
         "django.server": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "django.db.backends": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "django.template": {"handlers": ["console"], "level": "INFO", "propagate": False},
-        'celery': {'handlers': ['console'], 'level': 'WARNING', 'propagate': False},
-        'amqp': {'handlers': ['console'], 'level': 'WARNING', 'propagate': False},
-        'kombu': {'handlers': ['console'], 'level': 'WARNING', 'propagate': False},
+        "celery": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "amqp": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "kombu": {"handlers": ["console"], "level": "WARNING", "propagate": False},
         "requests": {"handlers": ["console"], "level": "WARNING"},
         "multiprocessing": {"handlers": ["console"], "level": "WARNING"},
         "py.warnings": {"handlers": ["console"], "level": "WARNING"},
@@ -207,4 +199,3 @@ CELERY_ALWAYS_EAGER = True
 APP_METRICS_BACKEND = "app_metrics.backends.db"
 APP_METRICS_MIXPANEL_TOKEN = None
 APP_METRICS_DISABLED = False
-
