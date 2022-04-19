@@ -113,9 +113,9 @@ def mixpanel_metric_task(slug, num, properties=None, **kwargs):
     url = getattr(settings, "APP_METRICS_MIXPANEL_API_URL", "http://api.mixpanel.com/track/")
 
     params = {"event": slug, "properties": properties}
-    b64_data = base64.b64encode(json.dumps(params))
+    b64_data = base64.b64encode(json.dumps(params).encode())
 
-    data = urlencode({"data": b64_data})
+    data = urlencode({"data": b64_data}).encode()
     req = Request(url, data)
     for i in range(num):
         response = urlopen(req)
