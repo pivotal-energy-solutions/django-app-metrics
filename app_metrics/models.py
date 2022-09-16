@@ -16,7 +16,7 @@ class Metric(models.Model):
 
     name = models.CharField(_("name"), max_length=128)
     company = models.ForeignKey("company.Company", blank=True, null=True, on_delete=models.SET_NULL)
-    slug = models.SlugField(_("slug"), max_length=128, db_index=True, unique=True)
+    slug = models.SlugField(_("slug"), max_length=128, db_index=True)
 
     class Meta:
         unique_together = ("slug", "company")
