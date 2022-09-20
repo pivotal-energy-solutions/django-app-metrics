@@ -8,8 +8,8 @@ https://github.com/pypa/sampleproject
 
 __name__ = "app_metrics"
 __author__ = "Pivotal Energy Solutions"
-__version_info__ = (2, 1, 13)
-__version__ = "2.1.13"
+__version_info__ = (3, 0, 0)
+__version__ = "3.0.0"
 __date__ = "2014/07/22 4:47:00 PM"
 __credits__ = [
     "Frank Wiles",
@@ -42,7 +42,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name=name,  # Required
-    version="2.1.13",  # Required
+    version="3.0.0",  # Required
     description="django-app-metrics is a reusable Django application for tracking and emailing application metrics.",
     long_description=long_description,  # Optional
     long_description_content_type="text/markdown",
