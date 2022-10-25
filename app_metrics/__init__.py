@@ -3,8 +3,8 @@
 
 __name__ = "app_metrics"
 __author__ = "Pivotal Energy Solutions"
-__version_info__ = (3, 0, 3)
-__version__ = "3.0.3"
+__version_info__ = (3, 0, 4)
+__version__ = "3.0.4"
 __date__ = "2014/07/22 4:47:00 PM"
 __credits__ = [
     "Frank Wiles",
