@@ -112,9 +112,9 @@ jobs:
         if: ${{ success() || failure() }}
         run: cat report.json
 
-      - name: upload report
+      - name: "Upload Coverage Results"
         if: ${{ success() || failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Bandit Security Report
           path: report.json
@@ -209,7 +209,7 @@ jobs:
             coverage xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           directory: .
           token: ${{ secrets.CODECOV_TOKEN }}
