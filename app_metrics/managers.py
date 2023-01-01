@@ -10,7 +10,7 @@ from django.db.models import Q
 
 __author__ = "Steven Klass"
 __date__ = "4/3/13 5:26 AM"
-__copyright__ = "Copyright 2011-2020 Pivotal Energy Solutions. All rights reserved."
+__copyright__ = "Copyright 2011-2023 Pivotal Energy Solutions. All rights reserved."
 __credits__ = [
     "Steven Klass",
 ]
@@ -39,14 +39,18 @@ class MetricManager(models.Manager):
         names = [name] if name else []
         if not len(names):
             EEPProgram = apps.get_model("eep_program", "EEPProgram")
-            names = EEPProgram.objects.filter_by_user(user).values_list("name", flat=True)
+            names = EEPProgram.objects.filter_by_user(user).values_list(
+                "name", flat=True
+            )
             names = ["EEP {} Certifications".format(name) for name in names]
 
         if user.is_superuser:
             return self.filter(metric__name__in=names, **kwargs)
         company = user.company
         if company.company_type in ["rater", "hvac", "qa", "provider"]:
-            return self.filter(metric__company=company, metric__name__in=names, **kwargs)
+            return self.filter(
+                metric__company=company, metric__name__in=names, **kwargs
+            )
 
         # Everyone else should only see data for companies in which we have mutual relationships.
         Relationship = apps.get_model("relationship", "Relationship")
