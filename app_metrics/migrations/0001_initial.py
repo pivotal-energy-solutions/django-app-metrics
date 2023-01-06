@@ -12,125 +12,241 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('company', '__first__'),
+        ("company", "__first__"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Metric',
+            name="Metric",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='name')),
-                ('slug', models.SlugField(max_length=128, verbose_name='slug')),
-                ('company', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='company.company')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=128, verbose_name="name")),
+                ("slug", models.SlugField(max_length=128, verbose_name="slug")),
+                (
+                    "company",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="company.company",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'metric',
-                'verbose_name_plural': 'metrics',
-                'unique_together': {('slug', 'company')},
+                "verbose_name": "metric",
+                "verbose_name_plural": "metrics",
+                "unique_together": {("slug", "company")},
             },
         ),
         migrations.CreateModel(
-            name='MetricYear',
+            name="MetricYear",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('num', models.BigIntegerField(default=0, verbose_name='number')),
-                ('created', models.DateField(default=datetime.date.today, verbose_name='created')),
-                ('metric', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.metric', verbose_name='metric')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("num", models.BigIntegerField(default=0, verbose_name="number")),
+                ("created", models.DateField(default=datetime.date.today, verbose_name="created")),
+                (
+                    "metric",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_metrics.metric",
+                        verbose_name="metric",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'year metric',
-                'verbose_name_plural': 'year metrics',
-                'ordering': ('created', 'metric'),
+                "verbose_name": "year metric",
+                "verbose_name_plural": "year metrics",
+                "ordering": ("created", "metric"),
             },
         ),
         migrations.CreateModel(
-            name='MetricWeek',
+            name="MetricWeek",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('num', models.BigIntegerField(default=0, verbose_name='number')),
-                ('created', models.DateField(default=datetime.date.today, verbose_name='created')),
-                ('metric', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.metric', verbose_name='metric')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("num", models.BigIntegerField(default=0, verbose_name="number")),
+                ("created", models.DateField(default=datetime.date.today, verbose_name="created")),
+                (
+                    "metric",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_metrics.metric",
+                        verbose_name="metric",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'week metric',
-                'verbose_name_plural': 'week metrics',
-                'ordering': ('created', 'metric'),
+                "verbose_name": "week metric",
+                "verbose_name_plural": "week metrics",
+                "ordering": ("created", "metric"),
             },
         ),
         migrations.CreateModel(
-            name='MetricSet',
+            name="MetricSet",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='name')),
-                ('no_email', models.BooleanField(default=False, verbose_name='no e-mail')),
-                ('send_daily', models.BooleanField(default=True, verbose_name='send daily')),
-                ('send_weekly', models.BooleanField(default=False, verbose_name='send weekly')),
-                ('send_monthly', models.BooleanField(default=False, verbose_name='send monthly')),
-                ('email_recipients', models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name='email recipients')),
-                ('metrics', models.ManyToManyField(to='app_metrics.metric', verbose_name='metrics')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=128, verbose_name="name")),
+                ("no_email", models.BooleanField(default=False, verbose_name="no e-mail")),
+                ("send_daily", models.BooleanField(default=True, verbose_name="send daily")),
+                ("send_weekly", models.BooleanField(default=False, verbose_name="send weekly")),
+                ("send_monthly", models.BooleanField(default=False, verbose_name="send monthly")),
+                (
+                    "email_recipients",
+                    models.ManyToManyField(
+                        to=settings.AUTH_USER_MODEL, verbose_name="email recipients"
+                    ),
+                ),
+                (
+                    "metrics",
+                    models.ManyToManyField(to="app_metrics.metric", verbose_name="metrics"),
+                ),
             ],
             options={
-                'verbose_name': 'metric set',
-                'verbose_name_plural': 'metric sets',
+                "verbose_name": "metric set",
+                "verbose_name_plural": "metric sets",
             },
         ),
         migrations.CreateModel(
-            name='MetricMonth',
+            name="MetricMonth",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('num', models.BigIntegerField(default=0, verbose_name='number')),
-                ('created', models.DateField(default=datetime.date.today, verbose_name='created')),
-                ('metric', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.metric', verbose_name='metric')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("num", models.BigIntegerField(default=0, verbose_name="number")),
+                ("created", models.DateField(default=datetime.date.today, verbose_name="created")),
+                (
+                    "metric",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_metrics.metric",
+                        verbose_name="metric",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'month metric',
-                'verbose_name_plural': 'month metrics',
-                'ordering': ('created', 'metric'),
+                "verbose_name": "month metric",
+                "verbose_name_plural": "month metrics",
+                "ordering": ("created", "metric"),
             },
         ),
         migrations.CreateModel(
-            name='MetricItem',
+            name="MetricItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('num', models.IntegerField(default=1, verbose_name='number')),
-                ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
-                ('metric', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.metric', verbose_name='metric')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("num", models.IntegerField(default=1, verbose_name="number")),
+                (
+                    "created",
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="created"),
+                ),
+                (
+                    "metric",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_metrics.metric",
+                        verbose_name="metric",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'metric item',
-                'verbose_name_plural': 'metric items',
+                "verbose_name": "metric item",
+                "verbose_name_plural": "metric items",
             },
         ),
         migrations.CreateModel(
-            name='MetricDay',
+            name="MetricDay",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('num', models.BigIntegerField(default=0, verbose_name='number')),
-                ('created', models.DateField(default=datetime.date.today, verbose_name='created')),
-                ('metric', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app_metrics.metric', verbose_name='metric')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("num", models.BigIntegerField(default=0, verbose_name="number")),
+                ("created", models.DateField(default=datetime.date.today, verbose_name="created")),
+                (
+                    "metric",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app_metrics.metric",
+                        verbose_name="metric",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'day metric',
-                'verbose_name_plural': 'day metrics',
-                'ordering': ('created', 'metric'),
+                "verbose_name": "day metric",
+                "verbose_name_plural": "day metrics",
+                "ordering": ("created", "metric"),
             },
         ),
         migrations.CreateModel(
-            name='Gauge',
+            name="Gauge",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128, verbose_name='name')),
-                ('slug', models.SlugField(max_length=128, verbose_name='slug')),
-                ('current_value', models.DecimalField(decimal_places=6, default='0.00', max_digits=15, verbose_name='current value')),
-                ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
-                ('updated', models.DateTimeField(default=django.utils.timezone.now, verbose_name='updated')),
-                ('company', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='company.company')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=128, verbose_name="name")),
+                ("slug", models.SlugField(max_length=128, verbose_name="slug")),
+                (
+                    "current_value",
+                    models.DecimalField(
+                        decimal_places=6,
+                        default="0.00",
+                        max_digits=15,
+                        verbose_name="current value",
+                    ),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="created"),
+                ),
+                (
+                    "updated",
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="updated"),
+                ),
+                (
+                    "company",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="company.company",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'gauge',
-                'verbose_name_plural': 'gauges',
+                "verbose_name": "gauge",
+                "verbose_name_plural": "gauges",
             },
         ),
     ]
