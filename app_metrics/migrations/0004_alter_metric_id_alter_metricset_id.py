@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("app_metrics", "0003_alter_gauge_current_value_alter_gauge_id_and_more"),
     ]
