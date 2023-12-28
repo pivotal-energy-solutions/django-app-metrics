@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from unittest import skipIf
+from unittest import skipIf, mock
 
-import mock
 from django.test import TestCase
 from django.conf import settings
 from app_metrics.utils import metric, gauge

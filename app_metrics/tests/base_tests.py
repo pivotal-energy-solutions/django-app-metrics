@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from decimal import Decimal
-import mock
+from unittest import mock
 
 from django.test import TestCase, TransactionTestCase
 from django.core import management

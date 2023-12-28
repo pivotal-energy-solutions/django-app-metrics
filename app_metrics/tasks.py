@@ -8,7 +8,6 @@ from urllib.request import Request, urlopen
 
 import dateutil.parser
 from django.utils.timezone import now as utcnow
-import pytz
 
 from celery import shared_task
 
