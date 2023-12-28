@@ -37,7 +37,6 @@ dependencies = [
     "django>=4.2",
     "celery",
     "django-environ",
-    "mysqlclient"
 ]
 
 [project.optional-dependencies]
@@ -63,6 +62,13 @@ path = "app_metrics/__init__.py"
 [tool.hatch.build.targets.sdist]
 include = [
     "/app_metrics",
+    "/app_metrics/templates/**/*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ['app_metrics']
+include = [
+    "/app_metrics/static/**/*",
     "/app_metrics/templates/**/*",
 ]
 
