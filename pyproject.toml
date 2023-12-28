@@ -88,14 +88,16 @@ exclude = '''
   | dist
 )/
 '''
-extend-exclude = '''
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-/static/.py  # exclude a file named foo.py in the root of the project (in addition to the defaults)
-'''
+
+[tool.bandit]
+targets = ['app_metrics']
+exclude_dirs = ["app_metrics/tests"]
+skips = ["B310", "B101"]
+
 
 [tool.coverage.run]
 branch = true
+command_line = "demo_app/manage.py test --noinput --settings=demo_app.settings_test app_metrics"
 omit = [
     "*/demo_app/**",
     "*/migrations/*",
