@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
-from unittest import skipIf
+from unittest import skipIf, mock
 
-import mock
 import time
 from django.test import TestCase
 from django.conf import settings
