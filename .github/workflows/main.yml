@@ -107,7 +107,7 @@ jobs:
   tests:
     name: Python ${{ matrix.python-version }} / ${{ matrix.db }} / Django ${{ matrix.django-version}}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.django-version == '~=5.0' }}
+#    continue-on-error: ${{ matrix.django-version == '~=5.0' }}
     strategy:
       max-parallel: 4
       matrix:

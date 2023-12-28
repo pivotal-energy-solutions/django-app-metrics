@@ -41,6 +41,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
+    "mysqlclient",
     "flake8",
     "tox",
     "coverage",
