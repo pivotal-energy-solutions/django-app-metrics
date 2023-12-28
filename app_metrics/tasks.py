@@ -55,7 +55,7 @@ def db_metric_task(num=1, **kwargs):
     created = kwargs.pop("created", utcnow())
     if isinstance(created, str):
         try:
-            created = dateutil.parser.parse(created).replace(tzinfo=pytz.utc)
+            created = dateutil.parser.parse(created).replace(tzinfo=datetime.timezone.utc)
         except Exception as err:
             log.error("Unable to parse date from {} - {}".format(created, err))
             created = utcnow()
