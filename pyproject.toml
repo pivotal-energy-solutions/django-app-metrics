@@ -36,11 +36,11 @@ classifiers = [
 dependencies = [
     "django>=4.2",
     "celery",
-    "django-environ",
 ]
 
 [project.optional-dependencies]
 test = [
+    "django-environ",
     "mysqlclient",
     "flake8",
     "tox",
