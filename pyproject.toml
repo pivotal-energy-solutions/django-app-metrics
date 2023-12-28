@@ -91,7 +91,7 @@ exclude = '''
 
 [tool.bandit]
 targets = ['app_metrics']
-exclude_dirs = ["app_metrics/tests"]
+exclude_dirs = ["app_metrics/tests", "demo_app"]
 skips = ["B310", "B101"]
 
 
