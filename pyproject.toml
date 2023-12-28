@@ -111,3 +111,9 @@ skip_covered = true
 skip_empty = true
 ignore_errors = true
 sort = "cover"
+
+[tool.bumper]
+exclude = [".idea", ".github", "demo_app"]
+version_files = ["app_metrics/__init__.py"]
+repo = "pivotal-energy-solutions/django-app-metrics"
+report = "out.json"
