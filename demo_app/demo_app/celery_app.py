@@ -8,14 +8,6 @@ from celery import Celery
 
 log = logging.getLogger(__name__)
 
-__author__ = "Steven K"
-__date__ = "5/28/20 12:14"
-__copyright__ = "Copyright 2011-2020 Pivotal Energy Solutions. All rights reserved."
-__credits__ = [
-    "Steven K",
-]
-
-
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "demo_app.settings")
 
