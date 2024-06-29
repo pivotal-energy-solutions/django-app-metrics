@@ -231,7 +231,6 @@ class TrendingTests(TestCase):
         this_week_date = week_for_date(datetime.date.today())
         previous_week_date = this_week_date - datetime.timedelta(weeks=1)
         previous_month_date = get_previous_month(this_week_date)
-        previous_year_date = get_previous_year(this_week_date)
 
         MetricWeek.objects.create(metric=self.metric1, num=5, created=this_week_date)
         MetricWeek.objects.create(metric=self.metric1, num=4, created=previous_week_date)
@@ -343,7 +342,7 @@ class MixpanelCommandTest1(TestCase):
 
     def setUp(self):
         new_metric = Metric.objects.create(name="foo bar")
-        i = MetricItem.objects.create(metric=new_metric)
+        MetricItem.objects.create(metric=new_metric)
         self.old_backend = settings.APP_METRICS_BACKEND
         settings.APP_METRICS_BACKEND = "app_metrics.backends.db"
 
@@ -361,7 +360,7 @@ class MixpanelCommandTest2(TestCase):
 
     def setUp(self):
         new_metric = Metric.objects.create(name="foo bar")
-        i = MetricItem.objects.create(metric=new_metric)
+        MetricItem.objects.create(metric=new_metric)
         self.old_backend = settings.APP_METRICS_BACKEND
         settings.APP_METRICS_BACKEND = "app_metrics.backends.mixpanel"
 

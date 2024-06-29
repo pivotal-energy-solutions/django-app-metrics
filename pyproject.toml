@@ -77,7 +77,7 @@ exclude = '(\.git|.venv|_build|build|dist|.*\/__pycache__\/)'
 
 [tool.ruff]
 line-length = 100
-lint.ignore = ["F401"]
+lint.ignore = ["F401", "F405"]
 
 [tool.bandit]
 targets = ['app_metrics']
