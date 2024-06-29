@@ -43,7 +43,8 @@ test = [
     "coverage",
     "pre-commit",
     "black",
-    "bandit"
+    "bandit",
+    "ruff"
 ]
 
 [project.urls]
