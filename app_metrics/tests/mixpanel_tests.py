@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+from unittest import skipIf
+
 from django.test import TestCase
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
+
 from app_metrics.utils import *  # noqa: F403
+
+skip_tests = settings.APP_METRICS_MIXPANEL_TOKEN is None
 
 
 class MixpanelMetricConfigTests(TestCase):
@@ -25,6 +29,7 @@ class MixpanelCreationTests(TestCase):
         settings.APP_METRICS_BACKEND = "app_metrics.backends.mixpanel"
         settings.APP_METRICS_MIXPANEL_TOKEN = "foobar"
 
+    @skipIf(skip_tests, "Missing Mixpanel token")
     def test_metric(self):
         metric("testing")
 
