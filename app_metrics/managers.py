@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """managers.py: Django app_metrics"""
 
-
 import logging
 
 from django.apps import apps
