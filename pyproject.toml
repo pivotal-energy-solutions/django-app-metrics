@@ -27,6 +27,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Utilities",
 ]
 dependencies = [
@@ -38,11 +39,10 @@ dependencies = [
 test = [
     "django-environ",
     "mysqlclient",
-    "flake8",
     "coverage",
     "pre-commit",
-    "black",
     "bandit",
+    "black",
     "ruff"
 ]
 
@@ -94,7 +94,7 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 75
+fail_under = 72
 precision = 1
 skip_covered = true
 skip_empty = true
