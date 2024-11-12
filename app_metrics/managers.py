@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """managers.py: Django app_metrics"""
 
 import logging

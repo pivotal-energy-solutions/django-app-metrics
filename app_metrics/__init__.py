@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 __name__ = "app_metrics"
 __author__ = "Pivotal Energy Solutions"
 __version_info__ = (4, 0, 12)

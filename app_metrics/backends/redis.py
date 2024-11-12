@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Backend to store info in Redis
 
 from app_metrics.tasks import redis_metric_task, redis_gauge_task

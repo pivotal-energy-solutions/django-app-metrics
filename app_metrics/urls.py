@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.urls import path
 
 from app_metrics.views import MonthlyMetricReport, YearlyMetricReport, MetricReports

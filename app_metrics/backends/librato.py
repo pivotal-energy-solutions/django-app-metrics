@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from app_metrics.tasks import librato_metric_task
 
 
