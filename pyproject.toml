@@ -54,6 +54,10 @@ Thanks = "https://saythanks.io/to/rh0dium"
 
 [tool.hatch.version]
 source = "vcs"
+fallback-version = "0.0.0.0"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.build.targets.sdist]
 include = [
